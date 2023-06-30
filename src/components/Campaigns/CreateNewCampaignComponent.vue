@@ -403,6 +403,9 @@ export default {
                     this.statusText = 'success'
                     this.popupMessage = __response.data.message
 
+
+                    // close form 
+                    this.$emit('closeForm', true)
                 }
 
             } catch(error) {

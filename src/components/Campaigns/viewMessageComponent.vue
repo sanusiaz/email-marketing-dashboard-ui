@@ -43,11 +43,31 @@
         components: {ButtonComponent},
 
         methods: {
-            async submitForm() {
-                try {
 
+            // Update Campaign Message
+            async submitForm() {
+
+                this.statusText = this.popupMessage = ''
+
+                try {
+                    let __response = await axios.post(`/campaign/${this.id}/message`)
+
+                    if ( __response.status === 201 ) {
+                        this.statusText = 'success'
+                        this.popupMessage = 'Campaign Has Been Updated Successfully'
+                    }
+                    else {
+                        this.statusText = 'error'
+                        this.popupMessage = 'An Error Occurred. Please Try Again'
+                    }
                 } catch( error ) {
-                    console.error(error)
+                    this.statusText = 'error'
+                    let serverErrorMessage = (error.request.response !== undefined
+                        && error.request.response !== '') 
+                            ? JSON.parse(error.request.response).message 
+                            : 'Internal Server Error'
+
+                    this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
                 }
             },
 
@@ -121,9 +141,9 @@
                     let __response = await axios.get(`/campaigns/${this.id}/message`)
 
                     if ( __response.status === 200 && __response.statusText !== 'error' ) {
-                        console.log(__response)
-
-                        this.formData.message = __response.data.data;
+                        this.formData.message = __response.data;
+                        this.statusText = 'success'
+                        this.popupMessage = 'Parsing Contents'
                         this.initTinyMce()
                     }
                     else {
@@ -131,7 +151,13 @@
                         this.popupMessage = 'Cannot Get Message At The Moment'
                     }
                 }catch( error ) {
-                    console.error(error)
+                    this.statusText = 'error'
+                    let serverErrorMessage = (error.request.response !== undefined
+                        && error.request.response !== '') 
+                            ? JSON.parse(error.request.response).message 
+                            : 'Internal Server Error'
+
+                    this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
                 }
             }
         },

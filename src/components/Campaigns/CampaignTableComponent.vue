@@ -4,7 +4,7 @@
 
             <div v-if="this.formMainComponet !== ''" class="popup_container flex place-content-center place-items-center">
                 <div class="relative bg-white p-2 px-4 rounded min-w-[300px] max-w-[300px] sm:min-w-[500px] sm:max-w-[500px]">
-                    <component :is="this.formMainComponet" :id="this.id"></component>
+                    <component @closeForm="triggerCloseForm" :is="this.formMainComponet" :id="this.id"></component>
 
                     <!-- Close Button -->
                     <span @click="this.formMainComponet = ''"
@@ -125,6 +125,16 @@ export default {
     methods: {
         showFormComponent() {
             this.formMainComponet = 'CreateNewCampaignComponent'
+        },
+
+
+        // Trigger Close form action
+        triggerCloseForm(value) {
+            if ( value ) {
+                setTimeout(() => {
+                    this.formMainComponet = ''
+                }, 4000);
+            }
         },
         async deleteCampaign(id) {
             this.statusText = this.popupMessage = ''
