@@ -28,10 +28,17 @@
               localStorage.setItem('user', JSON.stringify( this.user )) 
 
           } catch ( error ) {
+
+            localStorage.removeItem('user')
+            localStorage.removeItem('token')
+            localStorage.removeItem('loggedInTimeStamp')
             // if there is any error redirect the user to login page 
             this.$router.push('/login')
           }
             
+        }
+        else {
+          // Check to see if user is still logged in 
         }
       },
       

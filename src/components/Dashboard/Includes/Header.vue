@@ -68,7 +68,10 @@ export default {
 
                     this.$emit('profilePicsUrl', this.profilePicsUrl)
                 }
-            })
+            }).catch(error => {
+                // redirect users to login page 
+                this.$router.push('/login')
+            });
     },
 }
 </script>

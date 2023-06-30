@@ -4,7 +4,7 @@
 
             <div v-if="this.formMainComponet !== ''" class="popup_container flex place-content-center place-items-center">
                 <div class="relative bg-white p-2 px-4 rounded min-w-[300px] max-w-[300px] sm:min-w-[500px] sm:max-w-[500px]">
-                    <component :is="this.formMainComponet"></component>
+                    <component :is="this.formMainComponet" :id="this.id"></component>
 
                     <!-- Close Button -->
                     <span @click="this.formMainComponet = ''"
@@ -33,49 +33,41 @@
                             class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                             <th class="px-4 py-3">Id</th>
                             <th class="px-4 py-3">Campaign</th>
-                            <th class="px-4 py-3">Total</th>
-                            <th class="px-4 py-3">Sent</th>
-                            <th class="px-4 py-3">Queued</th>
+                            <th class="px-4 py-3">Total Emails</th>
+                            <th class="px-4 py-3">Sent Emails</th>
                             <th class="px-4 py-3">Sent to</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Created</th>
-                            <th class="px-4 py-3">Template</th>
-                            <th class="px-4 py-3">Edit / Delete</th>
+                            <th class="px-4 py-3">Message</th>
+                            <th class="px-4 py-3">Delete</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        <tr v-for="campaign in campaigns" :key="campaign.id" class="text-gray-700 dark:text-gray-400">
-                            <td class="px-4 py-3">{{ campaign.id }}</td>
+                        <tr v-for="(campaign, index) in campaigns" :key="campaign.id" class="text-gray-700 dark:text-gray-400">
+                            <td class="px-4 py-3">{{ index +1 }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center text-sm">
-                                    <!-- Avatar with inset shadow -->
-
                                     <a href="#" class="cursor-pointer hover:underline">
                                         <p class="font-semibold text-left">{{ campaign.name }}</p>
-                                        <p class="text-xs text-gray-600 dark:text-gray-400">
-                                            Type: {{ campaign.type }}
-                                            &nbsp; <i class="fas fa-external-link-alt"></i>
-                                        </p>
+                                        
                                     </a>
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                {{ campaign.totalEmails }}
+                                {{ campaign.totalEmail }}
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 {{ campaign.sentEmail }}
                             </td>
-                            <td class="px-4 py-3 text-sm">
-                                {{ campaign.queuedEmail }}
+                            <td class="px-4 py-3 text-xs">
+                                <span   class="px-2 py-1 font-semibold leading-tight text-yellow-700  bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-green-100">
+                                    {{ campaign.sentTo }}
+                                </span>
                             </td>
                             <td class="px-4 py-3 text-xs">
-                                <a :href="campaign.folderViewLink"  class="px-2 py-1 cursor-pointer font-semibold leading-tight text-yellow-700 hover:underline bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-green-100">
-                                    Subscribers...
-                                </a>
-                            </td>
-                            <td class="px-4 py-3 text-xs">
+                                
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp; Sending...
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp; {{ campaign.status }}
                             </span>
                             </td>
                             <td class="px-4 py-3 text-sm">
@@ -83,16 +75,14 @@
                             </td>
 
                             <td class="px-4 py-3 text-left text-xs">
-                                <!-- View Template Button -->
-                                <a :href="campaign.templateLink"  class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail"><i class="fas fa-eye"></i>&nbsp; View Template </a>
+                                <!-- View Message Button -->
+                                <span @click="viewMessage(campaign.id)"  class="px-2 cursor-pointer hover:underline py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail"><i class="fas fa-eye"></i>&nbsp; View Message </span>
                             </td>
 
                             <td class="px-4 py-3 text-sm">
                                 <div class="flex gap-1 w-max">
-                                    <span class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-green-600 hover:border-green-600 w-max m-auto relative flex align-center justify-center bg-green-600 text-sm rounded-lg p-2">
-                                        <i class="fas fa-pen"></i>
-                                    </span>
-                                    <span class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-red-600 hover:border-red-600 w-max m-auto relative flex align-center justify-center bg-red-600 text-sm rounded-lg p-2">
+                                    
+                                    <span @click="deleteCampaign(campaign.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-red-600 hover:border-red-600 w-max m-auto relative flex align-center justify-center bg-red-600 text-sm rounded-lg p-2">
                                         <i class="fas fa-trash-alt"></i>
                                     </span>
                                 </div>
@@ -103,49 +93,77 @@
             </div>
         </section>
     </div>
+
+
+        
+    <!-- Popup Message -->
+    <PopupMessageComponent :popupMessage="this.popupMessage" :statusText="this.statusText"
+        v-if="this.popupMessage !== ''" />
 </template>
 
 <script>
 
-import 'simplebar'; // or "import SimpleBar from 'simplebar';" if you want to use it manually.
-import 'simplebar/dist/simplebar.css'
-
 // You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
-import ResizeObserver from 'resize-observer-polyfill';
 import CreateNewCampaignComponent from './CreateNewCampaignComponent.vue'
-
+import viewMessageComponent from './viewMessageComponent.vue'
 import ButtonComponent from '../Auth/ButtonComponent.vue'
-window.ResizeObserver = ResizeObserver;
+import PopupMessageComponent from '../PopupMessageComponent.vue'
+import axios from 'axios'
+
+
 export default {
     name: 'CampaignTableComponent',
     data() {
         return {
-            campaigns: [
-                { id: 1, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 2, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 3, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 4, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 5, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 6, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 7, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 8, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 9, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 10, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 11, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 12, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 13, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 14, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 15, name: 'Some campaign name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' }
-            ],
-            formMainComponet: ''
+            campaigns: [],
+            formMainComponet: '',
+            popupMessage: '',
+            statusText: '',
+            id: null
         }
     },
     methods: {
         showFormComponent() {
             this.formMainComponet = 'CreateNewCampaignComponent'
+        },
+        async deleteCampaign(id) {
+            this.statusText = this.popupMessage = ''
+            if ( id !== "" && id !== undefined ) {
+                try {
+                    let __response = await axios.delete('/campaigns/'+id);
+                    if ( __response.status === 201 ) {
+                        this.statusText = 'success'
+                        this.popupMessage = __response.data.message
+
+                        this.campaigns = this.campaigns.filter((e) => {
+                            return e.id !== id
+                        })
+                    }
+                } catch( error ) {
+                    this.statusText = 'error'
+                    let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
+                    this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
+                }
+            }
+        },
+
+        async viewMessage(id) {
+            this.id = id
+            this.formMainComponet = 'viewMessageComponent'           
         }
     },
-    components: { CreateNewCampaignComponent, ButtonComponent }
+    components: { CreateNewCampaignComponent, ButtonComponent, PopupMessageComponent, viewMessageComponent },
+
+    async mounted() {
+        try {
+            let __response = await axios.get('/campaigns');
+            if ( __response.status === 200 ) {
+                this.campaigns = __response.data.data
+            }
+        }catch(error) {
+            console.log(error)
+        }
+    }
 }
 </script>
 

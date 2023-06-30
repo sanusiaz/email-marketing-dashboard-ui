@@ -18,9 +18,6 @@
 
             </div>
            
-            <!-- Campaign Form Create Popup -->
-            <!-- Edit Campaign Action -->
-            <!-- Delete Campaign Action -->
             <!-- Campaign filtering -->
             <Footer></Footer>
         </div>
@@ -38,7 +35,7 @@ export default {
     name: "CampaignComponent",
     data() {
         return {
-            title: 'Settings',
+            title: 'Campaign',
         }
     },
     components: { Sidebar, Header, Footer, CampaignTableComponent }

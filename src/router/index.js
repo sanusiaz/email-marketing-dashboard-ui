@@ -154,12 +154,15 @@ router.beforeEach((to, from, next) => {
 
   // always check the user if they are still logged in after 24 hrs
   let __loggedInTimeStamp = localStorage.getItem('loggedInTimeStamp')
+  let loggedInUser = localStorage.getItem('user')
 
   if ( __loggedInTimeStamp !== null && Math.round(new Date().getTime() / 1000) >= (JSON.parse(__loggedInTimeStamp) + 86400)  ) {
     // Remove all localstorage
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     localStorage.removeItem('loggedInTimeStamp');
+
+    loggedInUser = null
   }
   else {
     // User is still logged in
@@ -170,13 +173,13 @@ router.beforeEach((to, from, next) => {
     }
   }
 
-  let loggedInUser = localStorage.getItem('user')
-  const authenticatedUser = loggedInUser;
+  
+  const authenticatedUser = ( loggedInUser !== null ) ?? false;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const redirectIfAuthenticated = to.matched.some(record => record.meta.redirectIfAuthenticated);
 
   if (requiresAuth && ! authenticatedUser) next('login')
-  else if (authenticatedUser && redirectIfAuthenticated) next('dashboard/home')
+  else if (authenticatedUser && redirectIfAuthenticated) next('/dashboard/home')
   else next();
 });
 

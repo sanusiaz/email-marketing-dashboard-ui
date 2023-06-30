@@ -18,10 +18,6 @@
 
             </div>
            
-            <!-- Email Lists Form Create Popup -->
-            <!-- Email Lists Email add and file csv upload Popup -->
-            <!-- Edit Email Lists Popup -->
-            <!-- Delete Email Lists -->
             <Footer></Footer>
         </div>
     </div>

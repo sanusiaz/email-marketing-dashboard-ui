@@ -87,7 +87,7 @@ export default {
                     if ( __data.token !== undefined ) {
                         // Store token as localStorage
                         localStorage.setItem('token', __data.token);
-                        localStorage.setItem('user', __data.user);
+                        localStorage.setItem('user', JSON.stringify(__data.user));
                         localStorage.setItem('loggedInTimeStamp', (new Date().getTime()/1000));
                         this.successMessage = 'Login Successfull. Please Wait..'
                         // redirect users to the admin dashboard

@@ -10,11 +10,14 @@
             <!-- First Step  -->
             <div class="steps relative p-3" v-show="stepCount === 1" :stepCount="stepCount">
 
-                <div class="flex flex-row space-x-2">
-                    <InputComponent label="Campaign Name" name="campaign_name" placeholder="Enter Campaign Name" />
+                <div class="space-x-2 w-full">
+                    <label for="name" class="py-3 flex flex-col p-1 px-1">
+                        <span class="font-normal text-left font-Outfit py-2">Name</span>
+                        <input type="text" v-model="this.formData.name"
+                            class="border border-gray-400 font-Inter px-3 py-3 placeholder-slate-400 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-slate-500 focus:ring-1 w-full ease-linear transition-all duration-150"
+                            placeholder="Enter Name" name="name">
 
-                    <!-- Select Campaign Type -->
-                    <InputComponent label="Campaign Type" name="campaign_type" type="dropdown" :options="campaignTypeOptions" />
+                    </label>
                 </div>
 
                 <div class="flex py-3 w-full justify-between">
@@ -35,10 +38,24 @@
             <div class="steps relative p-3" v-show="stepCount === 2" :stepCount="stepCount">
                 <span>Pick a template</span>
                 
-                <div class="overflow-y-auto max-h-[300px] mt-3 mb-2" data-simplebar data-simplebar-auto-hide="false"> 
+                <div class="overflow-y-auto max-h-[300px] mt-3 mb-2" data-simplebar data-simplebar-auto-hide="false">
                     <div class="grid grid-cols-2 gap-2 p-2 px-5 overflow-hidden">
-                        <div v-for="template in templates" :key="template.id" @click="loadSelectedTemplate(template.id)" class="p-1 flex align-center justify-center cursor-pointer hover:border-blue-700 border-2 border-gray-200 rounded">
-                            <img :src="image" alt="Template">
+                        <div v-for="template in templates" :key="template.id"
+                            class="p-1 flex align-center justify-center group cursor-pointer hover:border-blue-700 border-2 border-gray-200 rounded relative"
+                            :class="(this.formData.template === template.id) ? 'border-green-700' : ''">
+                            <img :src="template.screenshot" :alt="template.name">
+
+                            <div
+                                class="absolute bg-[#c4c4c478] w-full hidden transition-all duration-400 group-hover:duration-400 group-hover:flex justify-center align-center items-center top-0 left-0 right-0 bottom-0">
+                                <div class="actions flex space-x-3">
+                                    <a :href="template.preview" target="__blank">
+                                        <i title="View Template"
+                                            class="fas fa-eye text-gray-800 hover:bg-blue-500 transition-all duration-200 hover:text-white p-2 bg-white rounded-md"></i>
+                                    </a>
+                                    <i @click="setSelectedTemplate(template.id)" title="Click To Select Template"
+                                        class="fas fa-check text-gray-800 p-2 hover:bg-green-500 transition-all duration-200 hover:text-white bg-white rounded-md"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,16 +85,17 @@
 
             </div>
 
+            
             <!-- Third Step -->
             <div class="steps relative p-3" v-show="stepCount === 3" :stepCount="stepCount">
                 
                 <div class="overflow-y-auto max-h-[300px] mt-3 mb-2" data-simplebar data-simplebar-auto-hide="false"> 
-                    
+                    <label for="subject" class="py-3 flex flex-col p-1 px-1">
+                        <span class="font-normal text-left font-Outfit py-2">Email Subject</span>
+                        <input type="text" v-model="this.formData.subject"
+                            class="border border-gray-400 font-Inter px-3 py-3 placeholder-slate-400 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-slate-500 focus:ring-1 w-full ease-linear transition-all duration-150"
+                            placeholder="Enter Email Subject" name="subject">
 
-                    <label for="message" class="py-3 flex flex-col  px-0">
-                        <span class="font-normal text-left font-Outfit py-2">Message</span>
-
-                        <textarea id="editor" @change="console.log(selectedTemplateContent)" v-model="selectedTemplateContent" class="">{{ selectedTemplateContent }}</textarea>
                     </label>
                 </div>
 
@@ -106,19 +124,61 @@
 
             </div>
 
-            <!-- Forth Step -->
-            <div class="steps relative p-3" v-show="stepCount === 4" :stepCount="stepCount">
+
+            <!-- Fourth Step -->
+            <div class="steps relative p-3 z-50" v-show="stepCount === 4" :stepCount="stepCount">
+                
+                <div class="overflow-y-auto max-h-[300px] mt-3 mb-2" data-simplebar data-simplebar-auto-hide="false"> 
+                    <label for="message" class="flex flex-col mb-3 w-full space-y-3 pr-2">
+                        <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
+                        <textarea style="height: 500px;" v-model="this.formData.message" name="message" id="message"
+                            class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
+                            placeholder="Enter Message Here">{{ this.formData.message }}</textarea>
+                    </label>
+                </div>
+
+                <div class="flex py-3 w-full justify-between -z-10 relative overflow-hidden">
+                    <!-- Prev -->
+                    <span
+                        @click="this.stepCount = this.stepCount - 1"
+                        class="h-12 cursor-pointer w-12 bg-blue-600 hover:text-blue-700 hover:shadow-lg text-white hover:bg-white border border-transparent hover:border-blue-600 transition-all duration-200 hover:duration-200 font-semibold p-3 rounded-full block relative hmax">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"></path>
+                        </svg>
+                    </span>
+                    <!-- Next Button -->
+                    <span
+                        @click="this.stepCount = this.stepCount + 1"
+                        class="h-12 cursor-pointer w-12 bg-blue-600 hover:text-blue-700 hover:shadow-lg text-white hover:bg-white border border-transparent hover:border-blue-600 transition-all duration-200 hover:duration-200 font-semibold p-3 rounded-full block relative hmax">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"></path>
+                        </svg>
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- Fifth Step -->
+            <div class="steps relative p-3" v-show="stepCount === 5" :stepCount="stepCount">
                 <span class="font-Inter underline">Send to:</span>             
                 
                 <div class="overflow-y-auto max-h-[300px] mt-3 mb-2 px-3 pr-4" data-simplebar data-simplebar-auto-hide="false">
                     <!-- Select Email Lists Folder  -->
-                    <InputComponent v-if="this.campaignIsForRecipients === false" label="Email Lists Folder" name="emai_lists" type="dropdown" :options="emailListsFolders" />
+
+                    <select @change="setEmailLists" v-if="this.campaignIsForRecipients === false" v-model="this.formData.lists"  name="email_folder" class="border border-gray-400 font-Inter px-3 py-3 placeholder-slate-400 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-slate-500 focus:ring-1 w-full ease-linear transition-all duration-150">
+                        <option value="" selected disabled>Please Select a value</option>
+                        <option v-for="option in emailListsFolders" :key="option.id" :value="option.id">{{ option.name }}</option>
+                    </select>
     
                     <!-- Recipients Emails -->
-                    <label v-if="this.campaignIsForRecipients === true" for="message" class="py-3 flex flex-col  px-0">
+                    <label v-if="this.campaignIsForRecipients === true" for="message" class="py-3 flex flex-col  px-1">
                         <span class="font-normal text-left font-Outfit py-2">Recipients Emails</span>
                         <!-- Show Mesage Box to enter email message -->
-                        <textarea class="text-sm w-full block relative outline-none border border-gray-400 p-3 rounded focus:ring-1 focus-ring-slate-200" name="recipients" id="recipients" cols="30" rows="10" placeholder="Enter Recipients email, seperate each with (,)"></textarea>
+                        <textarea class="text-sm w-full block relative outline-none border border-gray-400 p-3 rounded focus:ring-1 focus-ring-slate-200" v-model="this.formData.recipients" name="recipients" id="recipients" cols="30" rows="10" placeholder="Enter Recipients email, seperate each with (,)"></textarea>
                     </label>
     
                     <span @click="this.campaignIsForRecipients = !this.campaignIsForRecipients" class="text-gray-500 py-4 cursor-pointer hover:text-gray-800 underline block">Or: {{ ( this.campaignIsForRecipients === false ) ? 'Recipients' : 'Email Lists' }}</span>  
@@ -136,26 +196,19 @@
                                 d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"></path>
                         </svg>
                     </span>
-                    <!-- Next Button -->
-                    <span
-                        @click="this.stepCount = this.stepCount + 1"
-                        class="h-12 cursor-pointer w-12 bg-blue-600 hover:text-blue-700 hover:shadow-lg text-white hover:bg-white border border-transparent hover:border-blue-600 transition-all duration-200 hover:duration-200 font-semibold p-3 rounded-full block relative hmax">
-                        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"></path>
-                        </svg>
-                    </span>
+                    <ButtonComponent @click.prevent="submit()" type="submit"
+                        class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">Start Campaign</ButtonComponent>
                 </div>
 
             </div>
 
         </template>
-
-        <template v-slot:button>
-            <ButtonComponent v-if="stepsAreCompleted">Create</ButtonComponent>
-        </template>
     </FormComponent>
+
+    
+    <!-- Popup Message -->
+    <PopupMessageComponent :popupMessage="this.popupMessage" :statusText="this.statusText"
+        v-if="this.popupMessage !== ''" />
 </template>
 
 
@@ -167,181 +220,220 @@ import FormComponent from '../FormsComponents/FormComponent.vue'
 import ButtonComponent from '../Auth/ButtonComponent.vue'
 import InputComponent from '../FormsComponents/InputComponent.vue'
 
-import Image from '../../assets/img/template.jpeg'
+import PopupMessageComponent from '../PopupMessageComponent.vue'
 
-// First Select all Campaign type
-// Then Allow user to select template from the campaign campaignType
-// Next step is for user to select the email folder or enter emails with , seperated values
-//  //  Enter Campaign Name or leave for auto generated name
+import axios from 'axios'
+
 // // // Users can click to schedule this campaign instead
-// // // Or Subject, Reply to email
 // NB: Social media links will come from the profile, Logo same, Company Name Same
 
 export default {
     name: 'CreateNewCampaignComponent',
     data() {
         return {
+            popupMessage: '',
+            statusText: '',
             formData: {
-                name: '',
-                campaignType: '',
-                emails: '',
-                emailFolderId: '',
-                selectedTemplateId: '',
-                bodyMessage: ''
+                name: null,
+                recipients: null,
+                lists: null,
+                template: null,
+                message: null
             },
             text: 'Create a new Campaign',
             stepCount: 1,
-            image: Image,
             stepsAreCompleted: false,
             campaignIsForRecipients: false,
-            selectedTemplateContent: '<p>This Simple Paragraph</p>',
-            campaignTypeOptions: [
-                { id: 1, name: 'Promotional Campaign', value: 'Promotional' },
-                { id: 2, name: 'Seasonal Campaign', value: 'Seasonal' },
-                { id: 3, name: 'Welcome Email Campaign', value: 'Welcome' },
-                { id: 4, name: 'Post Purchase Drip', value: 'Post Purchase Drip' },
-                { id: 6, name: 'Invitation Emails', value: 'Invitation' },
-                { id: 7, name: 'Discount Offers', value: 'Discount' },
-                { id: 7, name: 'Discount Offers', value: 'Birthday' },
-            ],  
-            emailListsFolders: [
-                {id: 1, name: 'Folder A', folderRef:'someuniquefolderref'},
-                {id: 2, name: 'Folder B', folderRef:'someuniquefolderref'},
-                {id: 3, name: 'Folder C', folderRef:'someuniquefolderref'},
-                {id: 4, name: 'Folder D', folderRef:'someuniquefolderref'},
-                {id: 5, name: 'Folder E', folderRef:'someuniquefolderref'},
-                {id: 6, name: 'Folder F', folderRef:'someuniquefolderref'},
-            ],
-
-            templates: [
-                { id: 1, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-                { id: 2, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-                { id: 3, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-                { id: 4, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-                { id: 5, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-                { id: 6, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-                { id: 7, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-                { id: 8, type: 'sometype', dataURI: 'LinkToGetTheFullHtmlData' },
-            ]
+            emailListsFolders: [],
+            templates: []
         }
     },
-    components: { FormComponent, InputComponent, ButtonComponent },
+    components: { FormComponent, InputComponent, ButtonComponent, PopupMessageComponent },
+
+    watch: {
+
+        // Watch is campaign is set for recipients
+        campaignIsForRecipients(value) {
+            if ( value ) {
+                this.formData.lists = null
+            }
+            else {
+                this.formData.recipients = null
+            }
+        }
+    },
 
     methods: {
-        loadSelectedTemplate(templateId) {
-            alert('This is when we load selected template contents alongside Its Blade Parts where to change ' + templateId)
+        // Get Selected Template Content and parse it to message box
+        async setSelectedTemplate(template) {
+            // This will clear out previous messages / template 
+            this.formData.message = ''
+
+            this.formData.template = template
+            this.statusText = this.popupMessage = ''
+
+            let __SelectedTemplate = this.templates.filter((e) => {
+                return e.id === template
+            })
+
+
+            if (__SelectedTemplate[0].preview !== undefined) {
+
+                this.popupMessage = 'Parsing Templates Contents...'
+                this.statusText = 'success'
+                try {
+                    let __contents = await axios.get(__SelectedTemplate[0].preview);
+                    if (__contents.status === 200) {
+                        
+                        this.formData.message = __contents.data
+                        this.initTinyMce()
+                        this.popupMessage = 'Template has been selected'
+                        this.statusText = 'success'
+
+                        this.stepCount = this.stepCount + 1;
+                    }
+
+
+                } catch (error) {
+                    console.error(error)
+                    // error = JSON.parse(error.response.request.response)
+                    this.statusText = 'error'
+                    // this.popupMessage = error.message
+                }
+            }
+            else {
+                this.popupMessage = 'No Preview found for this template'
+                this.statusText = 'error'
+            }
+        },
+
+        async getAllTemplate() {
+            this.$emit('getTitle', '')
+            let __response = await axios.get('/templates/campaigns')
+            if ( __response.status === 200 ) {
+                console.log(__response)
+                this.templates = __response.data.data
+            }
+        },
+
+        async getAllListsFolders() {
+            try {
+                let __response = await axios.get('/lists');
+                if ( __response.status === 200 && __response.statusText !== 'error' ) {
+                    if ( Array.isArray( __response.data.data ) ) {
+                        this.emailListsFolders = __response.data.data;
+                        this.emailListsFolders = this.emailListsFolders.filter( (e) => {
+                            return e.folderRef !== ''
+                        } )
+                    }
+                }
+            } catch( error ) {
+                this.statusText = 'error'
+                let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
+                this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
+            }
+        },
+
+
+        initTinyMce() {
+                tinymce.remove();
+
+                var component = this.formData;
+                // Tiny MCE Free Init 
+                tinymce.init({
+                    selector: 'textarea#message',
+                    target: this.$el,
+                    init_instance_callback: function (editor) {
+                        editor.on('Change KeyUp Undo Redo', function (e) {
+                            component.message = editor.getContent();
+                        });
+                        // component.objTinymce = editor;
+                        editor.setContent(component.message)
+                    },
+                    height: '700px',
+                    width: '100%',
+                    menubar: true,
+                    plugins: [
+                        'advlist autolink lists link image charmap print preview anchor',
+                        'searchreplace visualblocks code fullscreen',
+                        'insertdatetime media table paste help wordcount autoresize'
+                    ],
+                    toolbar: 'undo redo | formatselect | ' +
+                        'bold italic backcolor | alignleft aligncenter ' +
+                        'alignright alignjustify | bullist numlist outdent indent | ' +
+                        'removeformat | help | fullscreen | image | paste | file',
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                    statusbar: false,
+                    toolbar_items_size: 'small',
+                    element_format: 'html',
+                    encoding: "UTF-8",
+                    entity_encoding: "html",
+                    oninit: "setPlainText",
+                    apply_source_formatting: true,
+                    images_upload_url: 'http://localhost/regno/image_processor.php',
+                    automatic_uploads: true,
+                    images_dataimg_filter: function (img) {
+                        return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
+                    },
+                    file_picker_types: 'file image media',
+                    images_file_types: 'jpg,svg,webp,png,svg',
+                    allow_script_urls: true,
+                    convert_urls: false,
+                    extended_valid_elements: "style,link[href|rel]",
+                    custom_elements: "style,link,~link",
+                    verify_html: false,
+                    inline_styles: true,
+                    // setup: function(ed) {
+                    //     ed.on('change', function(e) {
+                    //         tinyMCE.triggerSave();
+                    //     });
+                    // },
+                    // cleanup: true,
+                });
+            },
+
+        async submit() {
+            this.statusText = this.popupMessage = ''
+            console.log(this.formData)
+            try {   
+                let __response = await axios.post('/campaigns', this.formData)
+
+                if ( __response.status === 201 && __response.statusText !== 'error'  ) {
+                    // campaign has been created successfully
+                    this.statusText = 'success'
+                    this.popupMessage = __response.data.message
+
+                }
+
+            } catch(error) {
+                console.log(error)
+                this.statusText = 'error'
+                let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
+                this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
+            }
+        },
+
+        setEmailLists(value) {
+            this.formData.lists = value.target.value
+            console.log(this.formData.lists)
         }
     },
     mounted() {
-        tinymce.remove();
-        // Tiny MCE Free Init 
-        tinymce.init({
-            selector: 'textarea#editor',
-            height: 520,
-            width: '100%',
-            menubar: true,
-            plugins: [
-                'advlist autolink lists link image charmap print preview anchor',
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste help wordcount autoresize'
-            ],
-            toolbar: 'undo redo | formatselect | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
-            'removeformat | help | fullscreen | image | paste | file',
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-            statusbar: false,
-            toolbar_items_size: 'small',
-            element_format: 'html',
-            encoding: "UTF-8",
-            entity_encoding : "html",
-            oninit : "setPlainText",
-            apply_source_formatting : true,
-            images_upload_url: 'http://localhost/regno/image_processor.php',
-            automatic_uploads: true,
-            images_dataimg_filter: function(img) {
-              return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-            },
-            file_picker_types: 'file image media',
-            images_file_types: 'jpg,svg,webp,png,svg',
-            allow_script_urls: true,
-            convert_urls: false,
-            extended_valid_elements:"style,link[href|rel]",
-            custom_elements:"style,link,~link",
-            verify_html: false,
-            inline_styles : true
-
-            // cleanup: true,
-        });
-
-
-        // tinymce.init({
-        //     selector: 'textarea',
-        //     plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
-        //     imagetools_cors_hosts: ['picsum.photos'],
-        //     menubar: 'file edit view insert format tools table help',
-        //     toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
-        //     toolbar_sticky: true,
-        //     autosave_ask_before_unload: true,
-        //     autosave_interval: "30s",
-        //     autosave_prefix: "{path}{query}-{id}-",
-        //     autosave_restore_when_empty: false,
-        //     autosave_retention: "2m",
-        //     image_advtab: true,
-        //     content_css: '//www.tiny.cloud/css/codepen.min.css',
-        //     link_list: [
-        //         { title: 'My page 1', value: 'http://www.tinymce.com' },
-        //         { title: 'My page 2', value: 'http://www.moxiecode.com' }
-        //     ],
-        //     image_list: [
-        //         { title: 'My page 1', value: 'http://www.tinymce.com' },
-        //         { title: 'My page 2', value: 'http://www.moxiecode.com' }
-        //     ],
-        //     image_class_list: [
-        //         { title: 'None', value: '' },
-        //         { title: 'Some class', value: 'class-name' }
-        //     ],
-        //     importcss_append: true,
-        //     file_picker_callback: function (callback, value, meta) {
-        //         /* Provide file and text for the link dialog */
-        //         if (meta.filetype === 'file') {
-        //         callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
-        //         }
-
-        //         /* Provide image and alt text for the image dialog */
-        //         if (meta.filetype === 'image') {
-        //         callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
-        //         }
-
-        //         /* Provide alternative source and posted for the media dialog */
-        //         if (meta.filetype === 'media') {
-        //         callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
-        //         }
-        //     },
-        //     templates: [
-        //             { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
-        //         { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
-        //         { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
-        //     ],
-        //     template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
-        //     template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
-        //     height: 520,
-        //     image_caption: true,
-        //     quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-        //     noneditable_noneditable_class: "mceNonEditable",
-        //     toolbar_mode: 'sliding',
-        //     contextmenu: "link image imagetools table",
-        // });
-
+        this.getAllTemplate()
+        this.getAllListsFolders()
     },
 }
 </script>
 
-<style lang="scss" scoped>
-.tox.tox-tinymce {
-    height: 500px !important;
-}
-.tox.tox-tinymce.tox-fullscreen {
-    height: 100vh !important;
-}
-</style>
+
+<style lang="scss">
+.popup_container {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    background: #808080ab;
+    width: 100%;
+    height: 100vh;
+    z-index: 999;
+}</style>

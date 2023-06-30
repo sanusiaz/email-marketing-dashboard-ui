@@ -183,6 +183,8 @@ export default {
                     editor.on('Change KeyUp Undo Redo', function (e) {
                         component.message = editor.getContent();
                     });
+
+                    editor.setContent(component.message)
                     // component.objTinymce = editor;
                 },
                 height: '700px',
@@ -251,6 +253,9 @@ export default {
 
         // Get Selected Template Content and parse it to message box
         async setSelectedTemplate(template) {
+            // This will clear out previous messages / template 
+            this.formData.message = ''
+            
             this.formData.template = template
 
             this.statusText = this.popupMessage = ''
@@ -266,10 +271,11 @@ export default {
                 this.statusText = 'success'
                 try {
                     let __contents = await axios.get(__SelectedTemplate[0].preview);
-                    this.initTinyMce()
                     if (__contents.status === 200) {
-
+                       
+                        
                         this.formData.message = __contents.data
+                        this.initTinyMce()
                         this.popupMessage = 'Template has been selected'
                         this.statusText = 'success'
 
