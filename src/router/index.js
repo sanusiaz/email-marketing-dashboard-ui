@@ -5,6 +5,10 @@ import ForgetPasswordView from '../views/ForgetPasswordView.vue'
 import ContactView from '../views/ContactView.vue'
 import AboutView from '../views/AboutView.vue'
 import ScheduleView from '../views/Dashboard/ScheduleView.vue'
+import NewsLetterView from '../views/Dashboard/NewsLetterView.vue'
+import NewsLetterCreateView from '../views/Dashboard/NewsLetterCreateView.vue'
+import NewsLetterUpdateView from '../views/Dashboard/NewsLetterUpdateView.vue'
+import NewsLetterShowView from '../views/Dashboard/NewsLetterShowView.vue'
 
 import AdminDashboardView from '../views/Dashboard/AdminDashboardView.vue'
 import SettingsView from '../views/Dashboard/SettingsView.vue'
@@ -108,7 +112,32 @@ const routes = [
   {
     path: '/dashboard/newsletter',
     name: 'admin-newsletter',
-    component: AdminDashboardView,
+    component: NewsLetterView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/dashboard/newsletter/create',
+    name: 'admin-newsletter-create',
+    component: NewsLetterCreateView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/dashboard/newsletter/:id',
+    name: 'admin-newsletter-show',
+    component: NewsLetterShowView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+
+  {
+    path: '/dashboard/newsletter/update/:id',
+    name: 'admin-newsletter-update',
+    component: NewsLetterUpdateView,
     meta: {
       requiresAuth: true
     }

@@ -19,7 +19,7 @@
 
         </teleport>
 
-        <ButtonComponent class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white" @click="showFormComponent()">Create New Campaign</ButtonComponent>
+        <router-link :to="{name: 'admin-newsletter-create'}" class="px-5 block hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">Create New Newsletter</router-link>
        
 
 
@@ -32,46 +32,40 @@
                         <tr
                             class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                             <th class="px-4 py-3">Id</th>
-                            <th class="px-4 py-3">Campaign</th>
-                            <th class="px-4 py-3">Total Emails</th>
-                            <th class="px-4 py-3">Sent Emails</th>
+                            <th class="px-4 py-3">Name</th>
                             <th class="px-4 py-3">Sent to</th>
+                            <th class="px-4 py-3">Lists</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Created</th>
                             <th class="px-4 py-3">Message</th>
-                            <th class="px-4 py-3">Delete</th>
+                            <th class="px-4 py-3">Edit/Delete</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        <tr v-for="(campaign, index) in campaigns" :key="campaign.id" class="text-gray-700 dark:text-gray-400">
+                        <tr v-for="(newsletter, index) in newsletters" :key="newsletter.id" class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">{{ index +1 }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center text-sm">
-                                    <a href="#" class="cursor-pointer hover:underline">
-                                        <p class="font-semibold text-left">{{ campaign.name }}</p>
-                                        
-                                    </a>
+                                    <p class="font-semibold text-left">{{ newsletter.name }}</p> 
                                 </div>
                             </td>
-                            <td class="px-4 py-3 text-sm">
-                                {{ campaign.totalEmail }}
-                            </td>
-                            <td class="px-4 py-3 text-sm">
-                                {{ campaign.sentEmail }}
+                            <td class="px-4 py-3 text-xs">
+                                <span class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-green-100">{{ newsletter.sentTo }}</span>
+                                
                             </td>
                             <td class="px-4 py-3 text-xs">
-                                <span   class="px-2 py-1 font-semibold leading-tight text-yellow-700  bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-green-100">
-                                    {{ campaign.sentTo }}
-                                </span>
+                                <span v-if="newsletter.lists !== null" class="px-2 py-1 font-semibold leading-tight capitalize text-yellow-700 bg-blue-100 rounded-full dark:bg-blue-700 dark:text-green-100">{{ newsletter.lists }}</span>
+                                <span v-else class="px-2 py-1 font-semibold leading-tight capitalize text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-green-100">Invalid Lists</span>
+                                
                             </td>
                             <td class="px-4 py-3 text-xs">
                                 
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp; {{ campaign.status }}
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp; {{ newsletter.status }}
                             </span>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                {{ campaign.createdAt }}
+                                {{ newsletter.createdAt }}
                             </td>
 
                             <td class="px-4 py-3 text-left text-xs">
@@ -81,8 +75,8 @@
 
                             <td class="px-4 py-3 text-sm">
                                 <div class="flex gap-1 w-max">
-                                    
-                                    <span @click="deleteCampaign(campaign.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-red-600 hover:border-red-600 w-max m-auto relative flex align-center justify-center bg-red-600 text-sm rounded-lg p-2">
+                                    <span @click="editNewsLetter(newsletter.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-green-600 hover:border-green-600 w-max m-auto relative flex align-center justify-center bg-green-600 text-sm rounded-lg p-2"><i class="fas fa-pen"></i></span>
+                                    <span @click="deleteNewsLetter(newsletter.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-red-600 hover:border-red-600 w-max m-auto relative flex align-center justify-center bg-red-600 text-sm rounded-lg p-2">
                                         <i class="fas fa-trash-alt"></i>
                                     </span>
                                 </div>
@@ -104,18 +98,18 @@
 <script>
 
 // You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
-import CreateNewCampaignComponent from './CreateNewCampaignComponent.vue'
-import viewMessageComponent from './viewMessageComponent.vue'
+import CreateNewNewsLetterComponent from './CreateNewNewsLetterComponent.vue'
+import UpdateNewsLetterComponent from './UpdateNewsLetterComponent.vue'
 import ButtonComponent from '../Auth/ButtonComponent.vue'
 import PopupMessageComponent from '../PopupMessageComponent.vue'
 import axios from 'axios'
 
 
 export default {
-    name: 'CampaignTableComponent',
+    name: 'NewsletterTableComponent',
     data() {
         return {
-            campaigns: [],
+            newsletters: [],
             formMainComponet: '',
             popupMessage: '',
             statusText: '',
@@ -124,7 +118,7 @@ export default {
     },
     methods: {
         showFormComponent() {
-            this.formMainComponet = 'CreateNewCampaignComponent'
+            this.formMainComponet = 'CreateNewNewsLetterComponent'
         },
 
 
@@ -136,16 +130,25 @@ export default {
                 }, 5000);
             }
         },
-        async deleteCampaign(id) {
+
+        // Edit Newsletter
+        editNewsLetter() {
+            this.formMainComponet = 'UpdateNewsLetterComponent'
+        },
+
+        /**
+         * Delete Newsletter 
+         */
+        async deleteNewsLetter(id) {
             this.statusText = this.popupMessage = ''
             if ( id !== "" && id !== undefined ) {
                 try {
-                    let __response = await axios.delete('/campaigns/'+id);
+                    let __response = await axios.delete('/newsletters/'+id);
                     if ( __response.status === 201 ) {
                         this.statusText = 'success'
                         this.popupMessage = __response.data.message
 
-                        this.campaigns = this.campaigns.filter((e) => {
+                        this.newsletters = this.newsletters.filter((e) => {
                             return e.id !== id
                         })
                     }
@@ -159,19 +162,22 @@ export default {
 
         async viewMessage(id) {
             this.id = id
-            this.formMainComponet = 'viewMessageComponent'           
+            this.formMainComponet = 'UpdateNewsLetterComponent'           
         }
     },
-    components: { CreateNewCampaignComponent, ButtonComponent, PopupMessageComponent, viewMessageComponent },
+    components: { CreateNewNewsLetterComponent, ButtonComponent, PopupMessageComponent, UpdateNewsLetterComponent },
 
     async mounted() {
         try {
-            let __response = await axios.get('/campaigns');
+            let __response = await axios.get('/newsletters');
             if ( __response.status === 200 ) {
-                this.campaigns = __response.data.data
+                this.newsletters = __response.data.data
             }
         }catch(error) {
             console.log(error)
+            this.statusText = 'error'
+            let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
+            this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
         }
     }
 }

@@ -44,8 +44,6 @@
 
 import axios from 'axios'
 
-import {mapGetters} from 'vuex'
-
 import ButtonComponent from './ButtonComponent.vue';
 import InputComponent from './InputComponent.vue';
 import FormComponent from './FormComponent.vue';
@@ -95,13 +93,18 @@ export default {
                     }
 
                 } catch( error ) {
-                    console.error(error)
                     this.processingForm = false
-                    if ( error.response.data.message !== undefined && error.response.data.message !== "" ) {
-                        this.errorMessage = error.response.data.message
+
+                    if ( error.message !== undefined ) {
+                        this.errorMessage = 'Internal Server Error'
                     }
                     else {
-                        this.errorMessage = 'Internal Server Error'
+                        if ( error.response.data.message !== undefined && error.response.data.message !== "" ) {
+                            this.errorMessage = error.response.data.message
+                        }
+                        else {
+                            this.errorMessage = 'Internal Server Error'
+                        }
                     }
                 }
 
@@ -112,18 +115,5 @@ export default {
         }
     },
     components: { InputComponent, ButtonComponent, FormComponent },
-    mounted() {
-        // console.log(this.user)
-        // if ( this.user !== '' ) {
-        //     if ( this.user.token === localStorage.getItem('token') ) {
-        //         // redirect user to admin login page since user is logged in
-        //         this.$router.push('/dashboard/home')
-        //     }
-        // }
-    },
-
-    computed: {
-        // ...mapGetters(['user'])
-    }
 }
 </script>
