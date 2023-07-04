@@ -9,12 +9,7 @@ import CampaignComponent from '../../components/Campaigns/CampaignComponent.vue'
 
 export default {
     name: "CampaignView",
-    components: { CampaignComponent },
-    mounted() {
-        this.$emit('getTitle', 'Campaign')
-        this.$emit('getActive', 'campaign')
-        this.$emit('loadLayouts', true)
-    },
+    components: { CampaignComponent }
 }
 </script>
 

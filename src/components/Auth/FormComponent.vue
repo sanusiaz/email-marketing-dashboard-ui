@@ -28,7 +28,7 @@ export default {
     props: {
         containerClass: {
             type: String,
-            default: 'w-full lg:w-3/6 px-6'
+            default: 'w-full lg:w-[600px] px-6'
         },
         action: {
             type: String,

@@ -1,5 +1,5 @@
 <template>
-    <FormComponent>
+    <FormComponent @submit.prevent="submit()">
         <template v-slot:title>
             <h3 class="font-medium capitalize text-xl pt-4 pb-2">{{ text }}</h3>
             <hr>
@@ -23,7 +23,7 @@
                         </div>
 
                         <div class="space-x-2 w-full">
-                            <label for="name" class="py-3 flex flex-col p-1 px-1">
+                            <label for="subject" class="py-3 flex flex-col p-1 px-1">
                                 <span class="font-normal text-left font-Outfit py-2">Subject</span>
                                 <input type="text" v-model="this.formData.subject"
                                     class="border border-gray-400 font-Inter px-3 py-3 placeholder-slate-400 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-slate-500 focus:ring-1 w-full ease-linear transition-all duration-150"
@@ -165,7 +165,7 @@
                         </span>
                        
                         <!-- Submit Button -->
-                        <ButtonComponent
+                        <ButtonComponent 
                             class="bg-blue-700 duration-200 transition-all hover:duration-200 hover:bg-white hover:text-blue-700 hover:shadow-lg text-white font-Poppins rounded w-max border border-blue-700 p-2  px-5">
                             Create </ButtonComponent>
                     </div>
@@ -319,7 +319,9 @@ export default {
 
         // TinyMCE Setup
         initTinyMce() {
+
             tinymce.remove();
+            
 
             var component = this.formData;
             // Tiny MCE Free Init 
@@ -329,9 +331,13 @@ export default {
                 init_instance_callback: function (editor) {
                     editor.on('Change KeyUp Undo Redo', function (e) {
                         component.message = editor.getContent();
+                        // component.objTinymce = editor;
                     });
-                    // component.objTinymce = editor;
-                    editor.setContent(component.message)
+
+                    if ( component.message !== null && component.message !== '' ) {
+
+                        editor.setContent(component.message)
+                    }
                 },
                 height: '700px',
                 width: '100%',
@@ -379,7 +385,7 @@ export default {
             this.statusText = this.popupMessage = ''
             this.processingForm = true
             try {
-                let __response = await axios.post('/campaigns', this.formData)
+                let __response = await axios.post('/newsletters', this.formData)
 
                 if (__response.status === 201 && __response.statusText !== 'error') {
                     // campaign has been created successfully
@@ -406,9 +412,9 @@ export default {
         }
     },
     mounted() {
+        this.initTinyMce()
         this.getAllTemplate()
         this.getAllListsFolders()
-        this.initTinyMce()
     },
 }
 </script>

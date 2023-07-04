@@ -10,11 +10,6 @@ import SettingsComponents from '../../components/Dashboard/SettingsComponents.vu
 export default {
     name: "SettingsView",
     components: { SettingsComponents },
-    mounted() {
-        this.$emit('getTitle', 'Settings')
-        this.$emit('getActive', 'settings')
-        this.$emit('loadLayouts', true)
-    },
     methods: {
         setProfilePics(value) {
             if ( value !== "" ) {

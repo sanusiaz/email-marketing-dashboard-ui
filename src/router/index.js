@@ -9,6 +9,7 @@ import NewsLetterView from '../views/Dashboard/NewsLetterView.vue'
 import NewsLetterCreateView from '../views/Dashboard/NewsLetterCreateView.vue'
 import NewsLetterUpdateView from '../views/Dashboard/NewsLetterUpdateView.vue'
 import NewsLetterShowView from '../views/Dashboard/NewsLetterShowView.vue'
+import NewsLetterMessageView from '../views/Dashboard/NewsLetterMessageView.vue'
 
 import AdminDashboardView from '../views/Dashboard/AdminDashboardView.vue'
 import SettingsView from '../views/Dashboard/SettingsView.vue'
@@ -74,7 +75,10 @@ const routes = [
     name: 'admin-dashboard',
     component: AdminDashboardView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Home',
+      activeSidebar: 'dashboard'
     }
   },
   {
@@ -82,7 +86,10 @@ const routes = [
     name: 'admin-analytics',
     component: AdminDashboardView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Analytics',
+      activeSidebar: 'analytics'
     }
   },
   {
@@ -90,7 +97,10 @@ const routes = [
     name: 'admin-surveys',
     component: AdminDashboardView,
      meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Survey',
+      activeSidebar: 'surveys'
     }
   },
   {
@@ -98,7 +108,10 @@ const routes = [
     name: 'admin-campaign',
     component: CampaignView,
      meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Campaign',
+      activeSidebar: 'campaign'
     }
   },
   {
@@ -106,7 +119,10 @@ const routes = [
     name: 'admin-lists',
     component: EmailListView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Lists',
+      activeSidebar: 'lists'
     }
   },
   {
@@ -114,7 +130,10 @@ const routes = [
     name: 'admin-newsletter',
     component: NewsLetterView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Newsletter',
+      activeSidebar: 'newsletter'
     }
   },
   {
@@ -122,7 +141,10 @@ const routes = [
     name: 'admin-newsletter-create',
     component: NewsLetterCreateView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Newsletter',
+      activeSidebar: 'newsletter'
     }
   },
   {
@@ -130,7 +152,10 @@ const routes = [
     name: 'admin-newsletter-show',
     component: NewsLetterShowView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Newsletter',
+      activeSidebar: 'newsletter'
     }
   },
 
@@ -139,7 +164,20 @@ const routes = [
     name: 'admin-newsletter-update',
     component: NewsLetterUpdateView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Newsletter',
+      activeSidebar: 'newsletter'
+    }
+  },
+
+  {
+    path: '/dashboard/newsletter/message/:id',
+    name: 'admin-newsletter-message',
+    component: NewsLetterMessageView,
+    meta: {
+      requiresAuth: true,
+      Applayouts: false
     }
   },
   {
@@ -147,7 +185,10 @@ const routes = [
     name: 'admin-schedule',
     component: ScheduleView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Schedule',
+      activeSidebar: 'schedule'
     }
   },
   {
@@ -155,7 +196,10 @@ const routes = [
     name: 'admin-settings',
     component: SettingsView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Settings',
+      activeSidebar: 'settings'
     }
   },
   {
@@ -163,7 +207,10 @@ const routes = [
     name: 'admin-subscribers',
     component: SubscribersView,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Subscribers',
+      activeSidebar: 'subscribers'
     }
   },
   {
@@ -180,7 +227,6 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-
   // always check the user if they are still logged in after 24 hrs
   let __loggedInTimeStamp = localStorage.getItem('loggedInTimeStamp')
   let loggedInUser = localStorage.getItem('user')

@@ -9,11 +9,7 @@ import HomeComponent from '../../components/Dashboard/HomeComponent.vue'
 export default {
     name: 'AdminDashboardView',
     components: { HomeComponent },
-    mounted() {
-        this.$emit('getTitle', 'Dashboard')
-        this.$emit('getActive', 'dashboard')
-        this.$emit('loadLayouts', true)
-    },
+
 }
 </script>
 

@@ -9,12 +9,7 @@ import UpdateNewsLetterComponent from '@/components/Newsletter/UpdateNewsLetterC
 
 export default {
     name: "NewsLetterUpdateView",
-    components: { UpdateNewsLetterComponent },
-    mounted() {
-        this.$emit('getTitle', 'Create New Newsletter')
-        this.$emit('getActive', 'newsletter')
-        this.$emit('loadLayouts', true)
-    },
+    components: { UpdateNewsLetterComponent }
 }
 </script>
 

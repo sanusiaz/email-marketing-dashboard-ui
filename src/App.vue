@@ -1,61 +1,28 @@
 <template>
-  <div v-if="loadAllLayouts">
 
-    <Sidebar :active="activeSidebar" />
-
-    <!-- Content Area -->
-    <div class="relative md:ml-64 bg-slate-100">
-      <Header :title="title" :profilePicsURI="this.profilePicsURL"></Header>
-      <div>
-        <RouterView @getTitle="setTitle" @getActive="setActive" @loadLayouts="setLayouts"/>
-      </div>
-      <Footer></Footer>
-    </div>
-  </div>
-  <div v-else>
-      <RouterView  @loadLayouts="setLayouts"/>
-  </div>
+  <IndexComponent :user="user"/>
+  
 </template>
 
 
 <script>
-import Sidebar from './components/Dashboard/Includes/Sidebar.vue'
-import Header from './components/Dashboard/Includes/Header.vue'
-import Footer from './components/Dashboard/Includes/Footer.vue'
-import { RouterView } from 'vue-router'
+
 import axios from 'axios'
+
+import IndexComponent from '@/components/IndexComponent.vue'
 
 
 export default {
   name: 'App',
+  
   data() {
     return {
-      user: null,
-      title: 'Home',
-      activeSidebar: '',
-      profilePicsURL: '',
-      loadAllLayouts: false
-    }
-  },
-
-  methods: {
-    setTitle(value) {
-      if (value !== "") {
-        this.title = value
-      }
-    },
-    setActive(value) {
-      if (value !== "") {
-        this.activeSidebar = value
-      }
-    },
-
-    setLayouts(value) {
-        this.loadAllLayouts = value
+      user: null
     }
   },
 
   async created() {
+    
     
     // Run this only once
     if (localStorage.getItem('user') === null) {
@@ -84,7 +51,7 @@ export default {
   },
 
 
-  components: { Header, Footer, Sidebar }
+  components: {  IndexComponent }
 }
 
 

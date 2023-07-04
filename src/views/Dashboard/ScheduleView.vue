@@ -6,12 +6,7 @@
 import ScheduleComponent from '../../components/Schedule/IndexComponent.vue'
 export default {
     name: 'ScheduleView',
-    components: { ScheduleComponent },
-    mounted() {
-        this.$emit('getTitle', 'Schedule')
-        this.$emit('getActive', 'schedule')
-        this.$emit('loadLayouts', true)
-    },
+    components: { ScheduleComponent }
 }
 </script>
 

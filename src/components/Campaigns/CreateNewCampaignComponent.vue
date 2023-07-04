@@ -359,7 +359,9 @@ export default {
                             component.message = editor.getContent();
                         });
                         // component.objTinymce = editor;
-                        editor.setContent(component.message)
+                        if ( component.message !== null && component.message !== '' ) {
+                            editor.setContent(component.message)
+                        }
                     },
                     height: '700px',
                     width: '100%',

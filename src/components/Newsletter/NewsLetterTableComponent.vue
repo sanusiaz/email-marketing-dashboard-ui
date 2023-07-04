@@ -37,8 +37,7 @@
                             <th class="px-4 py-3">Lists</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Created</th>
-                            <th class="px-4 py-3">Message</th>
-                            <th class="px-4 py-3">Edit/Delete</th>
+                            <th class="px-4 py-3">View/Delete</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -68,14 +67,11 @@
                                 {{ newsletter.createdAt }}
                             </td>
 
-                            <td class="px-4 py-3 text-left text-xs">
-                                <!-- View Message Button -->
-                                <span @click="viewMessage(campaign.id)"  class="px-2 cursor-pointer hover:underline py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail"><i class="fas fa-eye"></i>&nbsp; View Message </span>
-                            </td>
+                            
 
                             <td class="px-4 py-3 text-sm">
                                 <div class="flex gap-1 w-max">
-                                    <span @click="editNewsLetter(newsletter.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-green-600 hover:border-green-600 w-max m-auto relative flex align-center justify-center bg-green-600 text-sm rounded-lg p-2"><i class="fas fa-pen"></i></span>
+                                    <router-link :to="{name: 'admin-newsletter-show', params: {id: newsletter.id}}" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-green-600 hover:border-green-600 w-max m-auto relative flex align-center justify-center bg-green-600 text-sm rounded-lg p-2"><i class="far fa-eye"></i></router-link>
                                     <span @click="deleteNewsLetter(newsletter.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-red-600 hover:border-red-600 w-max m-auto relative flex align-center justify-center bg-red-600 text-sm rounded-lg p-2">
                                         <i class="fas fa-trash-alt"></i>
                                     </span>
@@ -99,7 +95,6 @@
 
 // You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
 import CreateNewNewsLetterComponent from './CreateNewNewsLetterComponent.vue'
-import UpdateNewsLetterComponent from './UpdateNewsLetterComponent.vue'
 import ButtonComponent from '../Auth/ButtonComponent.vue'
 import PopupMessageComponent from '../PopupMessageComponent.vue'
 import axios from 'axios'
@@ -131,10 +126,7 @@ export default {
             }
         },
 
-        // Edit Newsletter
-        editNewsLetter() {
-            this.formMainComponet = 'UpdateNewsLetterComponent'
-        },
+    
 
         /**
          * Delete Newsletter 
@@ -160,12 +152,9 @@ export default {
             }
         },
 
-        async viewMessage(id) {
-            this.id = id
-            this.formMainComponet = 'UpdateNewsLetterComponent'           
-        }
+        
     },
-    components: { CreateNewNewsLetterComponent, ButtonComponent, PopupMessageComponent, UpdateNewsLetterComponent },
+    components: { CreateNewNewsLetterComponent, ButtonComponent, PopupMessageComponent },
 
     async mounted() {
         try {

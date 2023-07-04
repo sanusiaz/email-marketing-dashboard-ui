@@ -9,12 +9,7 @@ import NewsLetterComponent from '../../components/Newsletter/NewsLetterComponent
 
 export default {
     name: "NewsLetterView",
-    components: { NewsLetterComponent },
-    mounted() {
-        this.$emit('getTitle', 'Newsletter')
-        this.$emit('getActive', 'newsletter')
-        this.$emit('loadLayouts', true)
-    },
+    components: { NewsLetterComponent }
 }
 </script>
 

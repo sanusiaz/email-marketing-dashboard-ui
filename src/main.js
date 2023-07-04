@@ -8,6 +8,7 @@ axios.defaults.baseURL = 'http://localhost:8007/api/v1'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import './assets/tailwind.css'
 
 
 let __loggedInToken = localStorage.getItem('token');
@@ -17,6 +18,5 @@ if ( __loggedInToken !== undefined ) {
 }
 
 const app = createApp(App)
-
 app.use(router)
 app.mount('#app')

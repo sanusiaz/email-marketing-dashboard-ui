@@ -9,12 +9,7 @@ import CreateNewNewsLetterComponent from '../../components/Newsletter/CreateNewN
 
 export default {
     name: "NewsLetterCreateView",
-    components: { CreateNewNewsLetterComponent },
-    mounted() {
-        this.$emit('getTitle', 'Create New Newsletter')
-        this.$emit('getActive', 'newsletter')
-        this.$emit('loadLayouts', true)
-    },
+    components: { CreateNewNewsLetterComponent }
 }
 </script>
 

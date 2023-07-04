@@ -7,12 +7,7 @@ import EmailListsComponent from '../../components/lists/EmailListsComponent.vue'
 
 export default {
     name: "EmailListView",
-    components: { EmailListsComponent },
-    mounted() {
-        this.$emit('getTitle', 'Email Lists')
-        this.$emit('getActive', 'lists')
-        this.$emit('loadLayouts', true)
-    },
+    components: { EmailListsComponent }
 }
 </script>
 
