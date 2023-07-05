@@ -8,9 +8,16 @@
         <template v-slot:main_form>
 
             <section class="flex flex-col gap-10 md:gap-20">
+
+                
+
                 <!-- first Step -->
                 <div class="steps relative p-5 md:p-10 " v-show="stepCount === 1" :stepCount="stepCount">
-
+                    <router-link :to="{ name: 'admin-newsletter' }"
+                    class="font-semibold font-OpenSans mt-4 py-2 relative w-max text-sm text-white bg-blue-600 rounded p-1 px-4 flex gap-2 align-middle items-center duration-200 hover:duration-200 hover:bg-white border border-blue-700 hover:shadow-md hover:text-blue-700 mb-3">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Back</span>
+                </router-link>
                     <div class="grid md:grid-cols-2 gap-10">
                         <div class="space-x-2 w-full">
                             <label for="name" class="py-3 flex flex-col p-1 px-1">
@@ -163,9 +170,9 @@
                                     d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"></path>
                             </svg>
                         </span>
-                       
+
                         <!-- Submit Button -->
-                        <ButtonComponent 
+                        <ButtonComponent
                             class="bg-blue-700 duration-200 transition-all hover:duration-200 hover:bg-white hover:text-blue-700 hover:shadow-lg text-white font-Poppins rounded w-max border border-blue-700 p-2  px-5">
                             Create </ButtonComponent>
                     </div>
@@ -321,7 +328,7 @@ export default {
         initTinyMce() {
 
             tinymce.remove();
-            
+
 
             var component = this.formData;
             // Tiny MCE Free Init 
@@ -334,7 +341,7 @@ export default {
                         // component.objTinymce = editor;
                     });
 
-                    if ( component.message !== null && component.message !== '' ) {
+                    if (component.message !== null && component.message !== '') {
 
                         editor.setContent(component.message)
                     }
@@ -384,6 +391,8 @@ export default {
         async submit() {
             this.statusText = this.popupMessage = ''
             this.processingForm = true
+
+            console.log(this.formData)
             try {
                 let __response = await axios.post('/newsletters', this.formData)
 
@@ -420,7 +429,8 @@ export default {
 </script>
 
 
-<style lang="scss">.popup_container {
+<style lang="scss">
+.popup_container {
     position: fixed;
     top: 0px;
     left: 0px;
@@ -429,4 +439,5 @@ export default {
     width: 100%;
     height: 100vh;
     z-index: 999;
-}</style>
+}
+</style>

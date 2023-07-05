@@ -31,8 +31,6 @@ export default {
         }
     },
     methods: {
-       
-
         setMessage(value) {
             this.popupMessage = value
         },

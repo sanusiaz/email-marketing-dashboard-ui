@@ -16,35 +16,37 @@
             <div class="grid md:grid-cols-2 gap-10">
                 <div class="border border-gray-300 rounded-md p-3">
                     <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Name: &nbsp;</span>
-                    <span>{{ this.newsletterInfo.name }}</span>
+                    <span class="font-Barlow">{{ this.newsletterInfo.name }}</span>
                 </div>
 
 
                 <div class="border border-gray-300 rounded-md p-3">
                     <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Subject: &nbsp;</span>
-                    <span>{{ this.newsletterInfo.subject }}</span>
+                    <span class="font-Barlow">{{ this.newsletterInfo.subject }}</span>
                 </div>
             </div>
 
-            <div class="border border-gray-300 rounded-md p-3">
+            <div v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined " class="border border-gray-300 rounded-md p-3">
                 <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Recipients Email Address: &nbsp;</span>
-                <span v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined " class="block relative">{{ this.newsletterInfo.recipients.join(', ') }}</span>
+                <span v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined " class="block relative">
+                    <span class="font-Barlow" v-html="this.newsletterInfo.recipients.join(', ')"></span>
+                </span>
             </div>
 
-            <div class="border border-gray-300 rounded-md p-3">
+            <div v-if="this.newsletterInfo.lists !== null" class="border border-gray-300 rounded-md p-3">
                 <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Lists: &nbsp;</span>
-                <span>{{ this.newsletterInfo.lists }}</span>
+                <span class="font-Barlow">{{ this.newsletterInfo.lists }}</span>
             </div>
 
             <div class="grid md:grid-cols-2 gap-10">
                 <div class="border border-gray-300 rounded-md p-3">
                     <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Sent to: &nbsp;</span>
-                    <span>{{ this.newsletterInfo.sentTo }}</span>
+                    <span class="font-Barlow">{{ this.newsletterInfo.sentTo }}</span>
                 </div>
 
                 <div class="border border-gray-300 rounded-md p-3">
                     <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Status: &nbsp;</span>
-                    <span class="text-slate-500">{{ this.newsletterInfo.status }}</span>
+                    <span class="text-slate-500 font-Barlow">{{ this.newsletterInfo.status }}</span>
                 </div>
             </div>
 
@@ -61,9 +63,9 @@
             <!-- Attachment -->
             <div class="border border-gray-300 rounded-md p-3">
                 <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Attachments: &nbsp;</span>
-                <a v-if="this.newsletterInfo.attachmentURL !== null" :href="this.newsletterInfo.attachmentURL" class="text-slate-500" id="message">{{ this.newsletterInfo.attachmentURL }}</a>
+                <a v-if="this.newsletterInfo.attachmentURL !== null" :href="this.newsletterInfo.attachmentURL" class="text-slate-500 font-Barlow" id="message">{{ this.newsletterInfo.attachmentURL }}</a>
 
-                <span class="text-slate-500" v-else>No Attachments</span>
+                <span class="text-slate-500 font-Barlow" v-else>No Attachments</span>
             </div>
 
             <!-- Edit Button -->

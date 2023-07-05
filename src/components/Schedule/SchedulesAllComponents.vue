@@ -12,35 +12,42 @@
                         <th class="px-4 py-3">Sent to</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Schedule At</th>
-                        <th class="px-4 py-3">Template</th>
+                        <th class="px-4 py-3">View/Edit/Delete</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    <tr v-for="(schedue, index) in schedules" :key="schedue.id" class="text-gray-700 dark:text-gray-400">
+                    <tr v-for="(schedule, index) in schedules" :key="schedule.id" class="text-gray-700 dark:text-gray-400">
                         <td class="px-4 py-3">{{ index+1 }}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center text-sm">
-                                <p class="font-semibold text-left">{{ schedue.subject }}</p>
+                                <p class="font-semibold text-left">{{ schedule.subject }}</p>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-sm capitalize">
-                            {{ schedue.sendTo }}
+                            {{ schedule.sendTo }}
                         </td>
                         <td class="px-4 py-3 text-xs">
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp;
-                                {{ (schedue.isQueued) ? 'Queued...' : 'Created...' }}
+                                {{ (schedule.isQueued) ? 'Queued...' : 'Created...' }}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            {{ schedue.updatedAt }}
+                            {{ schedule.updatedAt }}
                         </td>
 
-                        <td class="px-4 py-3 text-left text-xs">
+                        <td class="px-4 py-3 text-left text-xs flex  gap-1">
                             <!-- View Template Button -->
-                            <a :href="schedue.templateLink" title="click to view template used"
-                                class="px-2 py-1 font-semibold cursor-pointer hover:underline leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail"><i
-                                    class="fas fa-eye"></i>&nbsp; View Template </a>
+
+                            <router-link title="View Schedule" :to="{ name: 'admin-schedule-show', params: {id: schedule.id} }" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-green-700 bg-green-100 rounded-full hover:bg-green-700 hover:text-green-100"><i class="fas fa-eye"></i></router-link>
+
+
+                            <router-link title="Edit Schedule" :to="{ name: 'admin-schedule-edit', params: {id: schedule.id} }" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-yellow-700 bg-yellow-100 rounded-full hover:bg-yellow-700 hover:text-yellow-100"><i class="fas fa-pen"></i></router-link>
+                            
+                            <span 
+                                @click="deleteSchedule(schedule.id)" title="Delete Selected Schedule"
+                                class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-red-700 bg-red-100 rounded-full duration-200 hover:duration-200 hover:bg-red-700 hover:text-red-100 "><i
+                                    class="fas fa-trash"></i></span>
                         </td>
 
                     </tr>
@@ -56,41 +63,51 @@ export default {
     name: 'SchedulesAllComponents',
 
     data() {
-
         return  {
+            schedules: [],
+        }
+    },
 
-            schedules: [
-                { id: 1, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 2, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 3, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 4, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 5, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 6, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 7, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 8, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 9, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 10, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 11, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 12, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 13, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 14, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' },
-                { id: 15, name: 'Some schedue name', totalEmails: 3004, folderViewLink: 'https://google.com', sentEmail: 200, queuedEmail: 200, type: 'Newsletter', templateLink: 'https://google.com', createdAt: '12 january, 2023' }
-            ],
+    methods: {
+        async deleteSchedule(id) {
+            this.$emit('getMessage', '')
+            this.$emit('getStatusText', '')
+            try {
+                let __response = await axios.delete(`/schedule/${id}/delete`)
+                if ( __response.status === 201 ) {
+                    this.$emit('getMessage', 'Schedule Has Been Deleted Successfully')
+                    this.$emit('getStatusText', 'success')
+
+                    this.schedules = this.schedules.filter(function (__element) {
+                        return __element.id !== id
+                    })
+                }
+            } catch( error ) {
+                console.error(error)
+                this.$emit('getMessage', error.response.data.message)
+                this.$emit('getStatusText', 'error')
+            }
         }
     },
 
     async created() {
         await axios.get('/schedule')
             .then(res => {
+                console.log(res)
                 if ( res.status === 200 ) {
                     this.schedules = res.data.data
                     console.log(res.data.data)
                 }
             })
             .catch( error => {
+                console.error(error)
                 this.$emit('getMessage', error.response.data.message)
                 this.$emit('getStatusText', 'error')
             })
+    },
+
+    mounted() {
+        
     }
 }
 </script>

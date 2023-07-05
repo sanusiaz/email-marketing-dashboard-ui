@@ -13,7 +13,7 @@
        </div>
 
         <div class="md:p-3 md:pb-0">
-            <component @getMessage="setMessage" @getStatusText="setStatusText" :is="this.importedComponent"></component>
+            <component @getMessage="setMessage" @getStatusText="setStatusText" @removeComponent="removeExtraComponent" :is="this.importedComponent"></component>
         </div>
     </div>
 </template>
@@ -36,11 +36,13 @@ export default {
     methods: {
         setStatusText(value) {
             this.$emit('getStatusText', value);
-            
         },
 
         setMessage(value) {
             this.$emit('getMessage', value);
+        },
+        removeExtraComponent() {
+            this.importedComponent = 'SchedulesAllComponents'
         }
     },
     components: { ButtonComponent, SchedulesAllComponents, ScheduleCreateComponent }

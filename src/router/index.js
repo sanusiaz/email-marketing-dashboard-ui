@@ -5,6 +5,8 @@ import ForgetPasswordView from '../views/ForgetPasswordView.vue'
 import ContactView from '../views/ContactView.vue'
 import AboutView from '../views/AboutView.vue'
 import ScheduleView from '../views/Dashboard/ScheduleView.vue'
+import ScheduleEditView from '../views/Dashboard/ScheduleEditView.vue'
+import ScheduleShowView from '../views/Dashboard/ScheduleShowView.vue'
 import NewsLetterView from '../views/Dashboard/NewsLetterView.vue'
 import NewsLetterCreateView from '../views/Dashboard/NewsLetterCreateView.vue'
 import NewsLetterUpdateView from '../views/Dashboard/NewsLetterUpdateView.vue'
@@ -184,6 +186,29 @@ const routes = [
     path: '/dashboard/schedule',
     name: 'admin-schedule',
     component: ScheduleView,
+    meta: {
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Schedule',
+      activeSidebar: 'schedule'
+    }
+  },
+
+  {
+    path: '/dashboard/schedule/:id',
+    name: 'admin-schedule-show',
+    component: ScheduleShowView,
+    meta: {
+      requiresAuth: true,
+      Applayouts: true,
+      title: 'Schedule',
+      activeSidebar: 'schedule'
+    }
+  },
+  {
+    path: '/dashboard/schedule/edit/:id',
+    name: 'admin-schedule-edit',
+    component: ScheduleEditView,
     meta: {
       requiresAuth: true,
       Applayouts: true,
