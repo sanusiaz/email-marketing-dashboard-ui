@@ -16,7 +16,7 @@
 
 <script>
 import axios from 'axios'
-import PopupMessageComponent from '../PopupMessageComponent.vue'
+import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 import ButtonComponent from '../Auth/ButtonComponent.vue'
 
 

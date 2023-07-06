@@ -9,15 +9,15 @@
 
             <section class="flex flex-col gap-10 md:gap-20">
 
-                
+
 
                 <!-- first Step -->
                 <div class="steps relative p-5 md:p-10 " v-show="stepCount === 1" :stepCount="stepCount">
                     <router-link :to="{ name: 'admin-newsletter' }"
-                    class="font-semibold font-OpenSans mt-4 py-2 relative w-max text-sm text-white bg-blue-600 rounded p-1 px-4 flex gap-2 align-middle items-center duration-200 hover:duration-200 hover:bg-white border border-blue-700 hover:shadow-md hover:text-blue-700 mb-3">
-                    <i class="fas fa-chevron-left"></i>
-                    <span>Back</span>
-                </router-link>
+                        class="font-semibold font-OpenSans mt-4 py-2 relative w-max text-sm text-white bg-blue-600 rounded p-1 px-4 flex gap-2 align-middle items-center duration-200 hover:duration-200 hover:bg-white border border-blue-700 hover:shadow-md hover:text-blue-700 mb-3">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Back</span>
+                    </router-link>
                     <div class="grid md:grid-cols-2 gap-10">
                         <div class="space-x-2 w-full">
                             <label for="name" class="py-3 flex flex-col p-1 px-1">
@@ -62,7 +62,7 @@
                                                 <i title="View Template"
                                                     class="fas fa-eye text-gray-800 hover:bg-blue-500 transition-all duration-200 hover:text-white p-2 bg-white rounded-md"></i>
                                             </a>
-                                            <i @click="setSelectedTemplate(template.id)" title="Click To Select Template"
+                                            <i @click="setSelectedTemplate(template.uuid)" title="Click To Select Template"
                                                 class="fas fa-check text-gray-800 p-2 hover:bg-green-500 transition-all duration-200 hover:text-white bg-white rounded-md"></i>
                                         </div>
                                     </div>
@@ -255,7 +255,7 @@ export default {
             this.statusText = this.popupMessage = ''
 
             let __SelectedTemplate = this.templates.filter((e) => {
-                return e.id === template
+                return e.uuid === template
             })
 
 

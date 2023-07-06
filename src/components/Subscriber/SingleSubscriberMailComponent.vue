@@ -51,7 +51,7 @@
                                         <i title="View Template"
                                             class="fas fa-eye text-gray-800 hover:bg-blue-500 transition-all duration-200 hover:text-white p-2 bg-white rounded-md"></i>
                                     </a>
-                                    <i @click="setSelectedTemplate(template.id)" title="Click To Select Template"
+                                    <i @click="setSelectedTemplate(template.uuid)" title="Click To Select Template"
                                         class="fas fa-check text-gray-800 p-2 hover:bg-green-500 transition-all duration-200 hover:text-white bg-white rounded-md"></i>
                                 </div>
                             </div>
@@ -262,7 +262,7 @@ export default {
             this.statusText = this.popupMessage = ''
 
             let __SelectedTemplate = this.templates.filter((e) => {
-                return e.id === template
+                return e.uuid === template
             })
 
 
