@@ -155,6 +155,7 @@ export default {
         // load default new subscirber message
         try {
             let __response = await axios.get('/subscribers/unsubscribe');
+            console.log(__response)
             if (__response.status === 200) {
                 if ( __response.data.data !== null ) {
                     this.formData.subject = __response.data.data.subject;
@@ -162,9 +163,9 @@ export default {
                     this.$emit('getMessage', __response.data.message)
                     this.$emit('getStatusText', 'success')
 
-                    tinymce.remove();
-                    this.initTinyMce()
                 }
+                tinymce.remove();
+                this.initTinyMce()
             }
         } catch (error) {
             error = JSON.parse(error.response.request.response)

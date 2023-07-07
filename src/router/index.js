@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+import HomeView from '@/views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import ForgetPasswordView from '../views/ForgetPasswordView.vue'
 import ContactView from '../views/ContactView.vue'
 import AboutView from '../views/AboutView.vue'
 import ScheduleView from '../views/Dashboard/ScheduleView.vue'
-import ScheduleEditView from '../views/Dashboard/ScheduleEditView.vue'
 import ScheduleShowView from '../views/Dashboard/ScheduleShowView.vue'
 import NewsLetterView from '../views/Dashboard/NewsLetterView.vue'
 import NewsLetterCreateView from '../views/Dashboard/NewsLetterCreateView.vue'
@@ -28,9 +29,9 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: AdminDashboardView,
+    component: HomeView,
     meta: {
-      redirectIfAuthenticated: true
+      // redirectIfAuthenticated: true,
     }
   },
   {
@@ -198,17 +199,6 @@ const routes = [
     path: '/dashboard/schedule/:id',
     name: 'admin-schedule-show',
     component: ScheduleShowView,
-    meta: {
-      requiresAuth: true,
-      Applayouts: true,
-      title: 'Schedule',
-      activeSidebar: 'schedule'
-    }
-  },
-  {
-    path: '/dashboard/schedule/edit/:id',
-    name: 'admin-schedule-edit',
-    component: ScheduleEditView,
     meta: {
       requiresAuth: true,
       Applayouts: true,

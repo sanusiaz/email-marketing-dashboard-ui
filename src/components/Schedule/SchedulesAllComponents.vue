@@ -12,7 +12,7 @@
                         <th class="px-4 py-3">Sent to</th>
                         <th class="px-4 py-3">Status</th>
                         <th class="px-4 py-3">Schedule At</th>
-                        <th class="px-4 py-3">View/Edit/Delete</th>
+                        <th class="px-4 py-3">Edit/Delete</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -37,12 +37,8 @@
                         </td>
 
                         <td class="px-4 py-3 text-left text-xs flex  gap-1">
-                            <!-- View Template Button -->
 
-                            <router-link title="View Schedule" :to="{ name: 'admin-schedule-show', params: {id: schedule.id} }" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-green-700 bg-green-100 rounded-full hover:bg-green-700 hover:text-green-100"><i class="fas fa-eye"></i></router-link>
-
-
-                            <router-link title="Edit Schedule" :to="{ name: 'admin-schedule-edit', params: {id: schedule.id} }" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-yellow-700 bg-yellow-100 rounded-full hover:bg-yellow-700 hover:text-yellow-100"><i class="fas fa-pen"></i></router-link>
+                            <router-link title="Edit Schedule" :to="{ name: 'admin-schedule-show', params: {id: schedule.id} }" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-yellow-700 bg-yellow-100 rounded-full hover:bg-yellow-700 hover:text-yellow-100"><i class="fas fa-pen"></i></router-link>
                             
                             <span 
                                 @click="deleteSchedule(schedule.id)" title="Delete Selected Schedule"

@@ -168,17 +168,18 @@
                         </svg>
                     </span>
 
-                    <!-- Submit Button -->
-                    <button @click.prevent="submitForm()" type="submit"
-                        class="text-sm bg-blue-700 w-max rounded-md duration-200 hover:duration-200 hover:bg-slate-700 font-Inter font-semibold text-white text-center p-3 px-5">
-                        <span>Send</span>
 
-                    </button>
+                    <ButtonComponent class="text-sm cursor-pointer bg-blue-700 w-max rounded-md duration-200 hover:duration-200 hover:bg-slate-700 font-Inter font-semibold text-white text-center p-3 px-5" @click.prevent="submitForm()" type="submit">
+                        <div class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-full h-full relative top-0 left-0 right-0">
+                            <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg> {{  ( this.processingForm  ) ? 'Processing' : 'Create'  }}
+                        </div>
+                    </ButtonComponent>
 
                 </div>
             </div>
-
-
         </template>
     </FormComponent>
 
@@ -196,6 +197,7 @@ import 'simplebar/dist/simplebar.css'
 import ResizeObserver from 'resize-observer-polyfill';
 import FormComponent from '../FormsComponents/FormComponent.vue';
 import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
+import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
 
 
 export default {
@@ -219,6 +221,7 @@ export default {
                 lists: ''
             },
             stepCount: 1,
+            processingForm: false,
             teleportedComponent: '',
             templates: {}
         }
@@ -267,7 +270,7 @@ export default {
 
         // Get all newsletter templates 
         async getAllTemplate() {
-            let __response = await axios.get('/templates/all')
+            let __response = await axios.get('/templates')
             if (__response.status === 200) {
                 this.templates = __response.data.data                
             }
@@ -279,9 +282,9 @@ export default {
             this.formData.message = ''
             this.statusText = ''
             this.popupMessage = ''
-
             this.formData.template = template
-
+            
+            tinymce.remove()
 
             let __SelectedTemplate = this.templates.filter((e) => {
                 return e.uuid === template
@@ -318,15 +321,15 @@ export default {
                 this.popupMessage  = 'No Preview found for this template'
                 this.statusText = 'error'
             }
-
-
-
-
         },
 
+        /**
+         * Submit Schedule Form Request 
+         */
         async submitForm() {
             this.popupMessage  = ''
             this.statusText = ''
+            this.processingForm = true
             const headers = { 'Content-Type': 'multipart/form-data' }
 
             if (this.formData.attachments !== null) {
@@ -339,6 +342,7 @@ export default {
             }
             await axios.post('/schedule/create', this.formData, { headers })
                 .then(response => {
+                    console.log(response)
                     if (response.status === 201) {
                         // empty all form data 
                         this.formData.subject = ''
@@ -354,6 +358,8 @@ export default {
 
                         this.$emit('getMessage', response.data.message)
                         this.$emit('getStatusText', 'success')
+
+                        this.processingForm = false
 
                         this.$emit('removeComponent', true)
                     }
@@ -427,7 +433,7 @@ export default {
             });
         }
     },
-    components: { FormComponent, PopupMessageComponent },
+    components: { FormComponent, PopupMessageComponent, ButtonComponent },
     mounted() {
 
         this.initTinyMce()

@@ -95,16 +95,12 @@ export default {
                 } catch( error ) {
                     this.processingForm = false
 
-                    if ( error.message !== undefined ) {
-                        this.errorMessage = 'Internal Server Error'
+                    if ( error.response.data.message !== undefined 
+                        && error.response.data.message !== '' ) {
+                        this.errorMessage = error.response.data.message
                     }
                     else {
-                        if ( error.response.data.message !== undefined && error.response.data.message !== "" ) {
-                            this.errorMessage = error.response.data.message
-                        }
-                        else {
-                            this.errorMessage = 'Internal Server Error'
-                        }
+                        this.errorMessage = 'Internal Server Error'
                     }
                 }
 
