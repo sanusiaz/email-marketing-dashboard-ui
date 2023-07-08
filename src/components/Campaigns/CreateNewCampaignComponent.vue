@@ -52,7 +52,7 @@
                                         <i title="View Template"
                                             class="fas fa-eye text-gray-800 hover:bg-blue-500 transition-all duration-200 hover:text-white p-2 bg-white rounded-md"></i>
                                     </a>
-                                    <i @click="setSelectedTemplate(template.uuid)" title="Click To Select Template"
+                                    <i @click="setSelectedTemplate(template.uuid, template.id)" title="Click To Select Template"
                                         class="fas fa-check text-gray-800 p-2 hover:bg-green-500 transition-all duration-200 hover:text-white bg-white rounded-md"></i>
                                 </div>
                             </div>
@@ -272,11 +272,11 @@ export default {
 
     methods: {
         // Get Selected Template Content and parse it to message box
-        async setSelectedTemplate(template) {
+        async setSelectedTemplate(template, templateId = 0) {
             // This will clear out previous messages / template 
             this.formData.message = ''
 
-            this.formData.template = template
+            this.formData.template = templateId
             this.statusText = this.popupMessage = ''
 
             let __SelectedTemplate = this.templates.filter((e) => {
@@ -410,6 +410,7 @@ export default {
             this.processingForm = true
             try {   
                 let __response = await axios.post('/campaigns', this.formData)
+                console.log(this.formData)
 
                 if ( __response.status === 201 && __response.statusText !== 'error'  ) {
                     // campaign has been created successfully
