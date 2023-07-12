@@ -6,10 +6,10 @@
         <!-- Content Area -->
         <div class="relative md:ml-64 bg-slate-100">
             <Header :title="title" :profilePicsURI="this.profilePicsURL"></Header>
-            <div>
+            <div class="mb-0 sm:mb-10 md:mb-20">
                 <RouterView />
             </div>
-            <Footer></Footer>
+            <Footer class="relative "></Footer>
         </div>
     </div>
     <div v-else>
