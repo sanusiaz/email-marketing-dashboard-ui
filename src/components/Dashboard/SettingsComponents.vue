@@ -154,9 +154,7 @@
                         <div class="flex flex-wrap justify-center">
                             <div class="w-full px-4 flex justify-center">
                                 <div class="relative w-full">
-
-                                    <UploadImage :defaultImage="this.profilePicsUrl"/>
-                                    
+                                    <UploadImage :defaultImage="( this.profilePicsUrl !== null ) ? this.profilePicsUrl : 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80'"/>
                                 </div>
                             </div>
                             <div class="w-full px-4 pt-5 text-center mt-20 font-Poppins">
@@ -364,8 +362,8 @@ export default {
 
     watch: {
         profilePicsUrl(value) {
-            if ( value !== "" ) {
-                this.$emit('profilePicsURI', profilePicsUrl)
+            if ( value !== "" && value !== null ) {
+                this.$emit('profilePicsURI', value)
             }
         }
     },
@@ -380,6 +378,10 @@ export default {
 
                     this.formData.username = this.userInfo.name
                     this.formData.email = this.userInfo.email
+
+                    // Set Profile Pics URL
+                    this.profilePicsUrl = response.data.user.profilePicsURI
+
 
                     if ( response.data.contactInfo !== null ) {
 
@@ -415,7 +417,8 @@ export default {
 
                 }
             })
-            .catch(error => {                
+            .catch((error) => {     
+                console.error(error)           
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
