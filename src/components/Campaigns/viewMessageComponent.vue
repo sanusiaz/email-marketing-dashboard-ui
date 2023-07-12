@@ -33,8 +33,8 @@
 <script>
 
     import axios from 'axios'
-    import ButtonComponent from '../Auth/ButtonComponent.vue'
-    import PopupMessageComponent from '../PopupMessageComponent.vue'
+    import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
+    import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 
     export default {
         name: 'viewMessageComponent',
