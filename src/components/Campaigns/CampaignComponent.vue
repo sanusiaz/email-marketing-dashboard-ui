@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import CampaignTableComponent from './CampaignTableComponent.vue'
+import CampaignTableComponent from '@/components/Campaigns/CampaignTableComponent.vue'
 
 export default {
     name: "CampaignComponent",

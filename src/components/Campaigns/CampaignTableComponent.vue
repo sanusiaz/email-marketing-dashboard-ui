@@ -38,8 +38,7 @@
                             <th class="px-4 py-3">Sent to</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Created</th>
-                            <th class="px-4 py-3">Message</th>
-                            <th class="px-4 py-3">Delete</th>
+                            <th class="px-4 py-3">View / Delete</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -67,20 +66,17 @@
                             <td class="px-4 py-3 text-xs">
                                 
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp; {{ campaign.status }}
-                            </span>
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 w-max">{{ campaign.status }}</span>
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 {{ campaign.createdAt }}
                             </td>
 
-                            <td class="px-4 py-3 text-left text-xs">
-                                <!-- View Message Button -->
-                                <span @click="viewMessage(campaign.id)"  class="px-2 cursor-pointer hover:underline py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail"><i class="fas fa-eye"></i>&nbsp; View Message </span>
-                            </td>
-
+                           
                             <td class="px-4 py-3 text-sm">
                                 <div class="flex gap-1 w-max">
+                                    <!-- View Message Button -->
+                                    <span @click="viewMessage(campaign.id)"  class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-green-600 flex items-center justify-center hover:border-green-600 w-max m-auto relative  align-center bg-green-600 text-sm rounded-lg p-2"><i class="fas fa-eye"></i></span>
                                     
                                     <span @click="deleteCampaign(campaign.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-red-600 hover:border-red-600 w-max m-auto relative flex align-center justify-center bg-red-600 text-sm rounded-lg p-2">
                                         <i class="fas fa-trash-alt"></i>
@@ -104,10 +100,10 @@
 <script>
 
 // You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
-import CreateNewCampaignComponent from './CreateNewCampaignComponent.vue'
-import viewMessageComponent from './viewMessageComponent.vue'
-import ButtonComponent from '../Auth/ButtonComponent.vue'
-import PopupMessageComponent from '../PopupMessageComponent.vue'
+import CreateNewCampaignComponent from '@/components/Campaigns/CreateNewCampaignComponent.vue'
+import viewMessageComponent from '@/components/Campaigns/viewMessageComponent.vue'
+import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
+import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 import axios from 'axios'
 
 
@@ -127,12 +123,27 @@ export default {
             this.formMainComponet = 'CreateNewCampaignComponent'
         },
 
+        async getAllCampaigns() {
+            try {
+                let __response = await axios.get('/campaigns');
+                if ( __response.status === 200 ) {
+                    this.campaigns = __response.data.data
+                }
+            }catch(error) {
+                this.popupMessage = 'Internal Server Error. Please Contact Admin.'
+                this.statusText = 'error'
+            }
+        },
 
         // Trigger Close form action
         triggerCloseForm(value) {
-            if ( value ) {
+            if ( value || value === '' ) {
                 setTimeout(() => {
                     this.formMainComponet = ''
+                    this.getAllCampaigns()
+
+                    // To Only Add the created data to the top of the result Just Uncomment the line below
+                    // this.campaigns.unshift(value)
                 }, 5000);
             }
         },
@@ -165,14 +176,7 @@ export default {
     components: { CreateNewCampaignComponent, ButtonComponent, PopupMessageComponent, viewMessageComponent },
 
     async mounted() {
-        try {
-            let __response = await axios.get('/campaigns');
-            if ( __response.status === 200 ) {
-                this.campaigns = __response.data.data
-            }
-        }catch(error) {
-            console.log(error)
-        }
+        this.getAllCampaigns()
     }
 }
 </script>

@@ -222,11 +222,11 @@
 
 
 
-import FormComponent from '../FormsComponents/FormComponent.vue'
-import ButtonComponent from '../Auth/ButtonComponent.vue'
-import InputComponent from '../FormsComponents/InputComponent.vue'
+import FormComponent from '@/components/FormsComponents/FormComponent.vue'
+import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
+import InputComponent from '@/components/FormsComponents/InputComponent.vue'
 
-import PopupMessageComponent from '../PopupMessageComponent.vue'
+import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 
 import axios from 'axios'
 
@@ -276,6 +276,10 @@ export default {
             // This will clear out previous messages / template 
             this.formData.message = ''
 
+            this.popupMessage = ''
+            this.statusText = ''
+            this.initTinyMce()
+
             this.formData.template = templateId
             this.statusText = this.popupMessage = ''
 
@@ -322,7 +326,6 @@ export default {
             this.$emit('getTitle', '')
             let __response = await axios.get('/templates/campaigns')
             if ( __response.status === 200 ) {
-                console.log(__response)
                 this.templates = __response.data.data
             }
         },
@@ -410,7 +413,6 @@ export default {
             this.processingForm = true
             try {   
                 let __response = await axios.post('/campaigns', this.formData)
-                console.log(this.formData)
 
                 if ( __response.status === 201 && __response.statusText !== 'error'  ) {
                     // campaign has been created successfully
@@ -420,6 +422,10 @@ export default {
 
                     // close form 
                     this.$emit('closeForm', true)
+                    // This line below will only send created data 
+                    // so it will be added at the top instead of reloading 
+                    // the campaign data/component
+                    // this.$emit('closeForm', __response.data.data)
                 }
 
             } catch(error) {
@@ -434,7 +440,6 @@ export default {
 
         setEmailLists(value) {
             this.formData.lists = value.target.value
-            console.log(this.formData.lists)
         }
     },
     mounted() {
