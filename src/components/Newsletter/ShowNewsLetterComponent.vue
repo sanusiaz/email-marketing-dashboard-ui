@@ -7,7 +7,7 @@
             <span>Back</span>
         </router-link>
 
-    
+
         <h2 class="text-black text-2xl font-Poppins font-semibold hidden">{{ title }}</h2>
 
 
@@ -26,10 +26,13 @@
                 </div>
             </div>
 
-            <div v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined " class="border border-gray-300 rounded-md p-3">
+            <div v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined"
+                class="border border-gray-300 rounded-md p-3">
                 <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Recipients Email Address: &nbsp;</span>
-                <span v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined " class="block relative">
-                    <span class="font-Barlow" v-html="this.newsletterInfo.recipients.join(', ')"></span>
+                <span
+                    v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined"
+                    class="block relative">
+                    <span class="font-Barlow" v-if="this.newsletterInfo.recipients !== null" v-html="( this.newsletterInfo.recipients !== null ) ? this.newsletterInfo.recipients.join(', ') : null"></span>
                 </span>
             </div>
 
@@ -54,7 +57,9 @@
             <!-- Message -->
             <div class="border border-gray-300 rounded-md p-3">
                 <span class="font-semibold mb-1 text-sm text-gray-700 pr-2 block pb-3">Message: &nbsp;</span>
-                <router-link title="Click to view message" class="font-normal text-sm font-Poppins text-white bg-yellow-700 hover:bg-transparent hover:duration-200 duration-200 w-max flex gap-2 align-middle items-center border border-yellow-700 hover:text-yellow-700 hover:shadow-md p-2 px-4 rounded-md" :to="{name:'admin-newsletter-message', params: {id: this.newsletterInfo.id}}">
+                <router-link title="Click to view message"
+                    class="font-normal text-sm font-Poppins text-white bg-yellow-700 hover:bg-transparent hover:duration-200 duration-200 w-max flex gap-2 align-middle items-center border border-yellow-700 hover:text-yellow-700 hover:shadow-md p-2 px-4 rounded-md"
+                    :to="{ name: 'admin-newsletter-message', params: { id: this.newsletterInfo.id } }">
                     <i class="fas fa-external-link-alt"></i>
                     <span>View Message</span>
                 </router-link>
@@ -63,13 +68,16 @@
             <!-- Attachment -->
             <div class="border border-gray-300 rounded-md p-3">
                 <span class="font-semibold mb-1 text-sm text-gray-700 pr-2">Attachments: &nbsp;</span>
-                <a v-if="this.newsletterInfo.attachmentURL !== null" :href="this.newsletterInfo.attachmentURL" class="text-slate-500 font-Barlow" id="message">{{ this.newsletterInfo.attachmentURL }}</a>
+                <a v-if="this.newsletterInfo.attachmentURL !== null" :href="this.newsletterInfo.attachmentURL"
+                    class="text-slate-500 font-Barlow" id="message">{{ this.newsletterInfo.attachmentURL }}</a>
 
                 <span class="text-slate-500 font-Barlow" v-else>No Attachments</span>
             </div>
 
             <!-- Edit Button -->
-            <router-link class="text-center w-max bg-blue-700 text-white font-normal font-Poppins p-2 duration-200 hover:underline hover:bg-white hover:duration-200 hover:text-blue-700 border border-transparent hover:border-blue-700 hover:shadow-md block mt-3 rounded px-5" :to="{name: 'admin-newsletter-update', params: {id: this.newsletterInfo.id}}">Edit Newsletter</router-link>
+            <router-link
+                class="text-center w-max bg-blue-700 text-white font-normal font-Poppins p-2 duration-200 hover:underline hover:bg-white hover:duration-200 hover:text-blue-700 border border-transparent hover:border-blue-700 hover:shadow-md block mt-3 rounded px-5"
+                :to="{ name: 'admin-newsletter-update', params: { id: this.newsletterInfo.id } }">Edit Newsletter</router-link>
 
         </section>
 
@@ -84,8 +92,8 @@
 <script>
 
 import axios from 'axios'
-import ButtonComponent from '../Auth/ButtonComponent.vue'
-import PopupMessageComponent from '../PopupMessageComponent.vue'
+import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
+import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 
 export default {
     name: 'ShowNewsLetterComponent',
@@ -111,6 +119,27 @@ export default {
 
     methods: {
 
+        async getTemplatesContents( __uuid ) {
+            if (__uuid !== null && __uuid !== '') {
+
+                try {
+
+                    let response = await axios.get(`/templates/${__uuid}`)
+                    if (response.status === 200) {
+                        this.formData.message = response.data
+                        this.newsletterInfo.message = response.data
+                    }
+                    else {
+                        // show error from server 
+                        this.popupMessage = response.data.message
+                        this.statusText = 'error'
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        },
+
         // Update Campaign Message
         async submitForm() {
 
@@ -120,7 +149,6 @@ export default {
                 let __response = await axios.post(`/campaigns/${this.id}/message`, this.formData)
 
                 if (__response.status === 201) {
-                    console.log(__response.data)
                     this.statusText = 'success'
                     this.popupMessage = __response.message
                 }
@@ -129,7 +157,6 @@ export default {
                     this.popupMessage = 'An Error Occurred. Please Try Again'
                 }
             } catch (error) {
-                console.error(error)
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== undefined
                     && error.request.response !== '')
@@ -152,12 +179,13 @@ export default {
                 if (__response.status === 200) {
                     this.newsletterInfo = __response.data.data
                     this.title = `${this.newsletterInfo.name} Newsletter`
-                    if ( __response.data.message !== undefined ) {
 
-                        this.newsletterInfo.message = __response.data.message
-                        console.log(__response)
+                    this.formData.template = this.newsletterInfo.template
+
+                    if ( this.newsletterInfo.message === null) {
+                        // Get default template message
+                        this.getTemplatesContents(this.newsletterInfo.template)
                     }
-                    console.log(__response.data)
                 }
                 else {
                     this.statusText = 'error'
@@ -176,71 +204,11 @@ export default {
                 }
 
             }
-        },
-
-
-        // Inistalize TinyMCE
-        initTinyMce() {
-            tinymce.remove()
-
-            var component = this.formData;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        component.message = editor.getContent();
-                    });
-                    // component.objTinymce = editor;
-                    editor.setContent(component.message)
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
-        },
+        }
     },
 
     async mounted() {
 
-        this.initTinyMce()
         this.setNewsletterId()
 
         // get newsletter message
