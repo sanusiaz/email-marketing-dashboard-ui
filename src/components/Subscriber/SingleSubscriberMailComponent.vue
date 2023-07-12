@@ -85,13 +85,14 @@
             <!-- Third Step is the message and send button -->
             <div class="steps relative p-3" v-show="stepCount === 3" :stepCount="stepCount">
                 <!-- Message Box -->
-
-                <label for="message" class="flex flex-col mb-3 w-full space-y-3">
-                    <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
-                    <textarea style="height: 500px;" v-model="this.formData.message" name="message" id="message"
-                        class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
-                        placeholder="Enter Message Here">{{ this.formData.message }}</textarea>
-                </label>
+                <div class="overflow-y-auto max-h-[300px] mt-3 mb-2" data-simplebar data-simplebar-auto-hide="false"> 
+                    <label for="message" class="flex flex-col mb-3 w-full space-y-3">
+                        <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
+                        <textarea style="height: 500px;" v-model="this.formData.message" name="message" id="message"
+                            class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
+                            placeholder="Enter Message Here">{{ this.formData.message }}</textarea>
+                    </label>
+                </div>
 
                 <div class="flex py-3 w-full justify-between">
                     <!-- Prev -->
