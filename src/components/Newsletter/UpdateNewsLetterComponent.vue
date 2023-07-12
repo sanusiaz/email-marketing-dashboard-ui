@@ -44,6 +44,7 @@
                         </div>
 
 
+                                {{ this.formData.template }} d jwdhh
                         <div class="bg-white p-2 rounded-md border border-gray-200">
                             <span
                                 class="p-2 py-4 border-b border-gray-700 block relative font-semibold capitalize font-Poppins">Pick
@@ -53,11 +54,10 @@
                                 data-simplebar-auto-hide="false">
                                 <div
                                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-10 p-2 px-5 overflow-hidden">
-                                    <div v-for="template in templates" :key="template.id"
+                                    <div v-for="template in templates" :key="template.uuid"
                                         class="shadow-md p-2 hover:shadow-lg flex align-center justify-center group cursor-pointer hover:border-blue-700 border-2 border-gray-200 rounded relative"
-                                        :class="(this.formData.template === template.id) ? 'border-green-700' : ''">
+                                        :class="(this.formData.template === template.uuid) ? 'border-green-700' : ''">
                                         <img :src="template.screenshot" :alt="template.name">
-
                                         <div
                                             class="absolute bg-[#c4c4c478] w-full hidden transition-all duration-400 group-hover:duration-400 group-hover:flex justify-center align-center items-center top-0 left-0 right-0 bottom-0">
                                             <div class="actions flex space-x-3">
@@ -177,10 +177,21 @@
                                 </svg>
                             </span>
 
-                            <!-- Submit Button -->
-                            <ButtonComponent
-                                class="bg-blue-700 duration-200 transition-all hover:duration-200 hover:bg-white hover:text-blue-700 hover:shadow-lg text-white font-Poppins rounded w-max border border-blue-700 p-2  px-5">
-                                Update </ButtonComponent>
+
+                            <ButtonComponent @click.prevent="submit()" type="submit"
+                                class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
+                                <div
+                                    class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-max h-full relative top-0 left-0 right-0">
+                                    <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg> {{ (this.processingForm) ? 'Processing' : 'Update' }}
+                                </div>
+                            </ButtonComponent>
                         </div>
 
                     </div>
@@ -196,14 +207,13 @@
 
 
     <!-- Popup Message -->
-    <PopupMessageComponent :popupMessage="this.popupMessage" :statusText="this.statusText"
-        v-if="this.popupMessage !== ''" />
+    <PopupMessageComponent  v-if="this.popupMessage !== ''" :popupMessage="this.popupMessage" :statusText="this.statusText" ></PopupMessageComponent>
 </template>
 
 <script>
 
 import axios from 'axios'
-import PopupMessageComponent from '../PopupMessageComponent.vue'
+import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 
 import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
 import FormComponent from '@/components/FormsComponents/FormComponent.vue'
@@ -259,18 +269,30 @@ export default {
 
     methods: {
 
+         async getTemplatesContents( __uuid ) {
+            if (__uuid !== null && __uuid !== '') {
+                try {
+                    let response = await axios.get(`/templates/${__uuid}`)
+                    if (response.status === 200) {
+                        this.formData.message = response.data
+                        this.initTinyMce()
+                    }
+                } catch (error) {
+                }
+            }
+        },
+
         // Get Selected Template Content and parse it to message box
         async setSelectedTemplate(template) {
-            // This will clear out previous messages / template 
             this.formData.message = ''
+            this.popupMessage = this.statusText = ''
 
+            this.initTinyMce()
             this.formData.template = template
-            this.statusText = this.popupMessage = ''
 
             let __SelectedTemplate = this.templates.filter((e) => {
                 return e.uuid === template
             })
-
 
             if (__SelectedTemplate[0].preview !== undefined) {
 
@@ -279,7 +301,7 @@ export default {
                 try {
                     let __contents = await axios.get(__SelectedTemplate[0].preview);
                     if (__contents.status === 200) {
-                        
+
                         this.formData.message = __contents.data
                         this.initTinyMce()
                         this.popupMessage = 'Template has been selected'
@@ -290,14 +312,13 @@ export default {
 
 
                 } catch (error) {
-                    console.error(error)
                     this.statusText = 'error'
                     let serverErrorMessage = (error.request.response !== undefined
-                        && error.request.response !== '') 
-                            ? JSON.parse(error.request.response).message 
-                            : 'Internal Server Error'
+                        && error.request.response !== '')
+                        ? JSON.parse(error.request.response).message
+                        : 'Internal Server Error'
 
-                    this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
+                    this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
                 }
             }
             else {
@@ -346,41 +367,51 @@ export default {
         },
 
         // Update Campaign Message
-        async submitForm() {
+        async submit() {
+            if ( this.newsletterId !== null && this.newsletterId !== undefined ) {
 
-            this.statusText = this.popupMessage = ''
-            this.processingForm = true
-            try {
-                let __response = await axios.put(`/newsletters/${id}`, this.formData)
+                this.statusText = ''
+                this.popupMessage = ''
+                this.processingForm = true
+                try {
+                    let __response = await axios.patch(`/newsletters/${this.newsletterId}`, this.formData)
+                    console.log(__response)
 
-                if (__response.status === 201) {
-                    console.log(__response.data)
-                    this.statusText = 'success'
-                    this.popupMessage = __response.message
-                }
-                else {
+                    if (__response.status === 201) {
+                        console.log(__response.data)
+                        this.popupMessage = __response.data.message
+                        this.statusText = 'success'
+                    }
+                    else {
+                        this.popupMessage = 'An Error Occurred. Please Try Again'
+                        this.statusText = 'error'
+                    }
+                } catch (error) {
+                    console.log(error)
                     this.statusText = 'error'
-                    this.popupMessage = 'An Error Occurred. Please Try Again'
-                }
-            } catch (error) {
-                console.error(error)
-                this.statusText = 'error'
-                let serverErrorMessage = (error.request.response !== undefined
-                    && error.request.response !== '')
-                    ? JSON.parse(error.request.response).message
-                    : 'Internal Server Error'
+                    let serverErrorMessage = (error.request.response !== undefined
+                        && error.request.response !== '')
+                        ? JSON.parse(error.request.response).message
+                        : 'Internal Server Error'
 
-                this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
+                    this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
+                }
+                this.processingForm = false
             }
-            this.processingForm = false
+            else {
+                this.popupMessage = 'Invalid Newsletter'
+                this.statusText = 'error'
+            }
         },
 
         async getNewsLetterInfo() {
             this.popupMessage = this.statusText = ''
             try {
-                this.popupMessage = 'Processing Data. Please Wait..'
+                this.popupMessage = 'Parsing Contents. Please Wait..'
                 this.statusText = 'success'
                 let __response = await axios.get('/newsletters/' + this.newsletterId + '?includeMessage=true')
+
+                console.log(__response)
 
                 if (__response.status === 200) {
 
@@ -392,15 +423,22 @@ export default {
                     this.formData.selectedList = __data.selectedList
                     this.formData.lists = __data.listId
                     this.formData.sendTo = __data.sendTo
-                    this.formData.recipients = __data.recipients
+                    this.formData.recipients = ( __data.recipients !== null ) ? 
+                         __data.recipients.join(', ') : null
                     this.formData.template = __data.template
+
                     this.formData.created = __data.createdAt
                     this.formData.message = __response.data.message
-                    // this.initTinyMce()
 
+                    if ( this.formData.message === null ) {
+                        this.getTemplatesContents(this.formData.template)
+                    }
+                    else {
+                        this.initTinyMce()
+                    }
                 }
             } catch (error) {
-                console.error(error)
+                console.log(error)
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
