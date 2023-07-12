@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import NewsLetterTableComponent from './NewsLetterTableComponent.vue'
+import NewsLetterTableComponent from '@/components/Newsletter/NewsLetterTableComponent.vue'
 
 export default {
     name: "NewsLetterComponent",

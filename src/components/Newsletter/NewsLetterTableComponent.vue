@@ -93,10 +93,9 @@
 
 <script>
 
-// You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
-import CreateNewNewsLetterComponent from './CreateNewNewsLetterComponent.vue'
-import ButtonComponent from '../Auth/ButtonComponent.vue'
-import PopupMessageComponent from '../PopupMessageComponent.vue'
+import CreateNewNewsLetterComponent from '@/components/Newsletter/CreateNewNewsLetterComponent.vue'
+import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
+import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 import axios from 'axios'
 
 
@@ -119,6 +118,8 @@ export default {
 
         // Trigger Close form action
         triggerCloseForm(value) {
+
+            alert('Hit Here')
             if ( value ) {
                 setTimeout(() => {
                     this.formMainComponet = ''
