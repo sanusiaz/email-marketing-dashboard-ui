@@ -26,8 +26,6 @@
                 <component @closeSideNav="triggerCloseSidenav" :is="this.sidebarComponent" :navigation="this.navigation"
                     :active="this.active"></component>
 
-
-
             </div>
         </div>
     </nav>
@@ -83,11 +81,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media screen and (max-width: 1000px) {
-    nav {
-        // width:  100px;
-    }
-}
 
 @media screen and (min-width: 0px) and (max-width: 800px) {
     nav {

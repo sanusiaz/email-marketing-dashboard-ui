@@ -9,9 +9,9 @@
                 </span>
             </div>
         </a>
-        <div class="bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
+        <div class="bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48 pic_cont"
             :class="{ 'hidden': !showProfileNav }"
-            style="    position: absolute; inset: 0px auto auto 0px; margin: 0px; left: -102%; top: 108%;;">
+            style=" position: absolute;  margin: 0px;">
             <a href="javascript:void(0);"
                 class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
                 Action </a><a href="javascript:void(0);"
@@ -59,4 +59,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.pic_cont {
+    right: 10px; 
+    top: 89%;
+    width: max-content;
+}
+</style>
