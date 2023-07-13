@@ -97,9 +97,10 @@ export default {
                 this.processingForm = true
                 try {
                     let __response = await axios.post('/auth/register', this.form)
-                    console.log(__response)
                     let message = __response.data.message;
                     this.successMessage = message
+
+                    this.processingForm = false
                 } catch( error ) {
                     this.processingForm = false
                     if ( error.response.data.message !== '' ) {

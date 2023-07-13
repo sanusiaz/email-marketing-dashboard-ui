@@ -137,7 +137,16 @@
 
                                     <div class="flex w-full justify-between py-3">
                                             <!-- Update Button -->
-                                        <ButtonComponent @click.prevent="saveSettings()" title="Click to update" class="bg-blue-600 hover:bg-white transition-all hover:duration-200 duration-200 border hover:shadow-md border-transparent hover:border-blue-700 hover:text-blue-700 text-white font-semibold font-Poppins p-5 py-3 text-center w-max rounded text-sm">Save</ButtonComponent>
+                                       
+                                        <ButtonComponent @click.prevent="saveSettings()"
+                                            title="Click to Update" type="submit" class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
+                                            <div class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-max h-full relative top-0 left-0 right-0">
+                                                <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg> {{  ( this.processingForm  ) ? 'Processing' : 'Update'  }}
+                                            </div>
+                                        </ButtonComponent>
 
                                         <span @click="this.showEmailConfig = true" title="Visit Email Config" class="underline text-gray-700 text-sm font-Inter cursor-pointer hover:text-blue-600">View Email Config</span>
                                     </div>
@@ -281,7 +290,19 @@
 
                     <div class="p-2 pb-0 email_config_button">
                         <!-- Submit Button -->
-                        <ButtonComponent @click.prevent="saveConfig()"> Save Config </ButtonComponent>
+                        <ButtonComponent @click.prevent="saveConfig()"
+                            title="Click to Update" type="submit"
+                            class="w-max bg-slate-700 transition-all duration-200 hover:duration-200 text-white font-Poppins hover:text-slate-700 border border-gray-700 hover:shadow-md p-4 py-2 rounded hover:bg-white text-sm">
+                            <div class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-max h-full relative top-0 left-0 right-0 place-content-center place-items-center">
+                                <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg> 
+                                <span class="text-center font-Inter">
+                                    {{  ( this.processingForm  ) ? 'Processing' : 'Save Config'  }}
+                                </span>
+                            </div>
+                        </ButtonComponent>
                     </div>
                 </div>
             </div>
@@ -323,6 +344,7 @@ export default {
         return {
             title: 'Settings',
             contactInfo: {},
+            processingForm: false,
             smtpInfo: {},
             socialInfo: {},
             userInfo: {},
@@ -432,6 +454,7 @@ export default {
 
     methods: {
         async saveSettings() {
+            this.processingForm = true
             this.messageComponent = this.statusText =  ''
             await axios.put('/settings', this.formData)
             .then(response => {
@@ -441,13 +464,17 @@ export default {
                     this.popupMessage = ( serverSuccessMessage !== undefined ) ? serverSuccessMessage : 'Updated Successfully'
                     this.messageComponent = 'PopupMessageComponent'
                 }
+
+                this.processingForm = false
             })
             .catch(error => {
+                this.processingForm = false
                 this.statusText = 'error'
                 let serverErrorMessage = (error.response.data.message !== "" &&  error.response.data.message !== undefined) ? error.response.data.message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : 'Error: Please Contact Site Admin'
                 this.messageComponent = 'PopupMessageComponent'
             })
+            
         },
 
         async saveConfig() {

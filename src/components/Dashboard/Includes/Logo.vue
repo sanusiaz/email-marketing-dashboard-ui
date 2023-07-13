@@ -1,5 +1,5 @@
 <template>
-    <router-link  v-if="type === 'text'" :to="{name: 'home'}" class="md:block text-left md:pb-2 truncate  text-slate-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"> {{ title }} </router-link>
+    <router-link  v-if="type === 'text'" :to="{name: 'home'}" class="md:block text-left md:pb-2 truncate  text-slate-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-0 md:p-4 md:px-0"> {{ title }} </router-link>
 
     <!-- This for image -->
     <img :src="src" :alt="alt" :class="class">

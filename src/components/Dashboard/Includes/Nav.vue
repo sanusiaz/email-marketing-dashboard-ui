@@ -1,42 +1,44 @@
 <template>
     <nav
-        class="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
-            <div class="h-full overflow-auto" data-simplebar data-simplebar-auto-hide="false">
-                <div
-                    class="md:flex-col space-y-5 md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
+        class="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 md:py-4 px-6">
+        <div class="h-full w-full overflow-auto" data-simplebar data-simplebar-auto-hide="false">
+            <div
+                class="md:flex-col space-y-5 md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
 
-                    <button class="cursor-pointer text-black md:hidden px-3 py-1 text-xl leading-none  rounded border border-solid border-transparent" type="button">
-                        <i class="fas fa-bars"></i>
-                    </button>
+                <button @click="showSideNav()"
+                    class="cursor-pointer text-black md:hidden px-3 py-1 text-xl leading-none  rounded border border-solid border-transparent"
+                    type="button">
+                    <i class="fas fa-bars" v-if="!isSidebarActive"></i>
+                    <i class="fas fa-times" v-if="isSidebarActive"></i>
+                </button>
 
-                    <span class="flex-none py-2">
-                        <Logo  type="text"/>
+                <div class="flex items-center align-middle" style="margin-top: 0px; padding: 7px 0px;">
+                    <span class="flex-none m-0 p-0 md:py-2" style="margin: 0px;">
+                        <Logo class="p-0 m-0" type="text" />
                     </span>
-                    
-            
-                    <ul  class="md:flex-col  md:min-w-full flex flex-col list-none md:mb-4">
-                        <li class="block w-full" v-for="list in navigation" :key="list.name">
-                            <router-link v-if="list.toName !== ''" :class="(list.name === active) ? 'active' : ''" class="text-slate-700 hover:text-slate-500 text-sm block mb-4 no-underline font-normal capitalize" :to="{name: list.toName}"><i :class="list.icon" class="mr-2 text-slate-300 text-base"></i>{{ list.name }}</router-link>
-                        </li>
-                    </ul>
 
-
-                    <router-link :to="{name: 'logout'}" class="text-gray-100 space-x-3 font-Inter text-sm transition-all duration-150 hover:duration-150 hover:bg-red-700 rounded-lg w-full p-3 py-2 bg-red-500 ">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </router-link>
-                    <a href="" class="text-gray-100 space-x-3 font-Inter text-sm transition-all duration-150 hover:duration-150 hover:bg-green-700 rounded-lg w-full p-3 py-2 bg-green-500 ">
-                        <i class="fas fa-donate"></i>
-                        <span>Donate</span>
-                    </a>
-
+                    <div class="block md:hidden">
+                        <!-- Profile Pics Components  -->
+                        <ProfilePicsComponent />
+                    </div>
                 </div>
+
+                <component @closeSideNav="triggerCloseSidenav" :is="this.sidebarComponent" :navigation="this.navigation"
+                    :active="this.active"></component>
+
+
+
             </div>
+        </div>
     </nav>
 </template>
 
 <script>
+
+import ProfilePicsComponent from './ProfilePicsComponent.vue'
 import Logo from './Logo.vue'
+import DesktopSidebar from './DesktopSidebar.vue'
+import PhoneSidebar from './PhoneSidebar.vue'
 
 import 'simplebar'; // or "import SimpleBar from 'simplebar';" if you want to use it manually.
 import 'simplebar/dist/simplebar.css'
@@ -47,6 +49,12 @@ window.ResizeObserver = ResizeObserver;
 
 export default {
     name: "Nav",
+    data() {
+        return {
+            isSidebarActive: false,
+            sidebarComponent: 'DesktopSidebar'
+        }
+    },
     props: {
         navigation: {
             type: Object,
@@ -57,14 +65,40 @@ export default {
             default: ''
         }
     },
-    components: { Logo }
+
+    methods: {
+        showSideNav() {
+            this.isSidebarActive = !this.isSidebarActive
+            this.sidebarComponent = 'PhoneSidebar'
+        },
+        triggerCloseSidenav(value) {
+            if (value) {
+                this.isSidebarActive = false
+                this.sidebarComponent = ''
+            }
+        }
+    },
+    components: { Logo, DesktopSidebar, PhoneSidebar, ProfilePicsComponent }
 }
 </script>
 
 <style lang="scss" scoped>
-.active {
-    color: #076f4f;
-    border-left: 3px solid #044504;
-    padding-left: 10px;
+@media screen and (max-width: 1000px) {
+    nav {
+        // width:  100px;
+    }
+}
+
+@media screen and (min-width: 0px) and (max-width: 800px) {
+    nav {
+        position: fixed;
+        top: 0px;
+        background: white;
+        left: 0px;
+        right: 0px;
+        width: 100%;
+        margin: 0px;
+        z-index: 99;
+    }
 }
 </style>

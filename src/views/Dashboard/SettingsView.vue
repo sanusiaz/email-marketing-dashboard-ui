@@ -13,8 +13,6 @@ export default {
     methods: {
         setProfilePics(value) {
             if ( value !== "" ) {
-                alert('Profile Pics has been changed')
-                alert(value)
                 this.$emit('profilePics', value)
             }
         }

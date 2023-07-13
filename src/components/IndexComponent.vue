@@ -4,7 +4,7 @@
         <Sidebar :active="activeSidebar" />
 
         <!-- Content Area -->
-        <div class="relative md:ml-64 bg-slate-100">
+        <div class="relative mt-16 md:mt-0 md:ml-64 bg-slate-100">
             <Header :title="title" :profilePicsURI="this.profilePicsURL"></Header>
             <div class="mb-0 sm:mb-10 md:mb-20">
                 <RouterView />
