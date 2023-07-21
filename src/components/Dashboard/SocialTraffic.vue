@@ -27,91 +27,19 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody>                        
+                        <tr v-for="socialTraffic in socialTraffic" :key="socialTraffic.id">
                             <th
                                 class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                Facebook </th>
+                                {{ socialTraffic.parsedUrl.host.split("www.")[1].split('.com').shift() }} </th>
                             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                1,480 </td>
+                                {{ socialTraffic.visitors }} </td>
                             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <div class="flex items-center"><span class="mr-2">60%</span>
-                                    <div class="relative w-full">
-                                        <div class="overflow-hidden h-2 text-xs flex rounded bg-red-200">
-                                            <div style="width:60%;"
-                                                class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                Facebook </th>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                5,480 </td>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <div class="flex items-center"><span class="mr-2">70%</span>
-                                    <div class="relative w-full">
-                                        <div class="overflow-hidden h-2 text-xs flex rounded bg-emerald-200">
-                                            <div style="width:70%;"
-                                                class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                Google </th>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                4,807 </td>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <div class="flex items-center"><span class="mr-2">80%</span>
+                                <div class="flex items-center"><span class="mr-2">{{ socialTraffic.clickRate }}%</span>
                                     <div class="relative w-full">
                                         <div class="overflow-hidden h-2 text-xs flex rounded bg-purple-200">
                                             <div style="width:80%;"
                                                 class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                Instagram </th>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                3,678 </td>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <div class="flex items-center"><span class="mr-2">75%</span>
-                                    <div class="relative w-full">
-                                        <div class="overflow-hidden h-2 text-xs flex rounded bg-lightBlue-200">
-                                            <div style="width:75%;"
-                                                class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-lightBlue-500">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th
-                                class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                twitter </th>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                2,645 </td>
-                            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                                <div class="flex items-center"><span class="mr-2">30%</span>
-                                    <div class="relative w-full">
-                                        <div class="overflow-hidden h-2 text-xs flex rounded bg-orange-200">
-                                            <div style="width:30%;"
-                                                class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500">
                                             </div>
                                         </div>
                                     </div>
@@ -126,10 +54,38 @@
 </template>
 
 <script>
+import axios from  'axios'
 export default {
     name: 'SocialTraffic',
+    data() {
+        return  {
+            socialTraffic: []
+        }
+    },
+    props: {
+        limit: {
+            type: String,
+            default: '20'
+        }
+    },
+     methods: {
+        async getSocialTraffic() {
+            try {
+                let __response = await axios.get('/social/visits?limit='+this.limit)
+                if ( __response.statusText !== 'error' && __response.status === 200 ) {
+                    this.socialTraffic = __response.data.data
+                }
+            } catch(error) {
+                console.log(error)
+            }
+        }
+    },
     mounted() {
-
+        // Run This Request every 4sec
+        this.getSocialTraffic()
+        setInterval(() => {
+            this.getSocialTraffic()
+        }, (1000) * 60);
     }
 }
 </script>

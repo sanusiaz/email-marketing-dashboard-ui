@@ -5,9 +5,9 @@
                 <div class="rounded-t mb-0 px-4 py-3 bg-transparent">
                     <div class="flex flex-wrap items-center">
                         <div class="relative w-full max-w-full flex-grow flex-1">
-                            <h6 class="uppercase text-gray-100 mb-1 text-xs font-semibold"> Overview
+                            <h6 class="uppercase text-gray-100 mb-1 text-xs font-semibold">  Overview ( Since last 7 days )
                             </h6>
-                            <h2 class="text-white text-xl font-semibold"> Traffic Overview </h2>
+                            <h2 class="text-white text-xl font-semibold"> Bounced Emails  </h2>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@ import PerformanceChart from './PerformanceChart.vue'
 
 export default {
     name: 'CombinedCharts',
-    components: {LineChart, PerformanceChart}
+    components: {LineChart, PerformanceChart},
 }
 </script>
 

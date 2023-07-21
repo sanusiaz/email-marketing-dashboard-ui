@@ -1,15 +1,15 @@
 <template>
     <div class="relative bg-emerald-600 md:pt-32 pb-32 pt-12">
-        <div class="px-4 md:px-10 mx-auto w-full">
+        <div class="px-1 sm:px-2 md:px-10 mx-auto w-full">
             <div>
                 <div class="flex flex-wrap">
-                    <div class="w-full lg:w-6/12 xl:w-3/12 px-4">
+                    <div class="w-full lg:w-6/12 xl:w-3/12 px-2 md:px-4" v-if="this.overviews !== null">
                         <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
                             <div class="flex-auto p-4">
                                 <div class="flex flex-wrap">
-                                    <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
+                                    <div class="relative w-full pr-0 max-w-full flex-grow flex-1">
                                         <h5 class="text-blueGray-400 uppercase font-bold text-xs">TRAFFIC</h5><span
-                                            class="font-semibold text-xl text-blueGray-700">350,897</span>
+                                            class="font-semibold text-xl text-blueGray-700">{{ this.overviews.traffic.format }}</span>
                                     </div>
                                     <div class="relative w-auto pl-4 flex-initial">
                                         <div
@@ -19,18 +19,18 @@
                                     </div>
                                 </div>
                                 <p class="text-sm text-blueGray-400 mt-4"><span class="mr-2 text-emerald-500"><i
-                                            class="fas fa-arrow-up"></i> 3.48% </span><span class="whitespace-nowrap">Since
+                                            class="fas fa-arrow-up"></i> {{ this.overviews.traffic.lastMonthTraffic }}% </span><span class="whitespace-nowrap">Since
                                         last month</span></p>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full lg:w-6/12 xl:w-3/12 px-4">
+                    <div  v-if="this.overviews !== null" class="w-full lg:w-6/12 xl:w-3/12 px-2 md:px-4">
                         <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
                             <div class="flex-auto p-4">
                                 <div class="flex flex-wrap">
-                                    <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
+                                    <div class="relative w-full pr-0 max-w-full flex-grow flex-1">
                                         <h5 class="text-blueGray-400 uppercase font-bold text-xs">NEW SUBSCRIBERS</h5>
-                                        <span class="font-semibold text-xl text-blueGray-700">2,356</span>
+                                        <span class="font-semibold text-xl text-blueGray-700">{{ this.overviews.subscribers.format }}</span>
                                     </div>
                                     <div class="relative w-auto pl-4 flex-initial">
                                         <div
@@ -39,19 +39,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="text-sm text-blueGray-400 mt-4"><span class="mr-2 text-red-500"><i
-                                            class="fas fa-arrow-down"></i> 3.48% </span><span
-                                        class="whitespace-nowrap">Since last week</span></p>
+                                <p class="text-sm text-blueGray-400 mt-4"><span class="mr-2 " :class="( this.overviews.subscribers.lastMonthSubscribers < 0 ) ? 'text-red-500' : 'text-emerald-500'"><i
+                                            class="fas " :class="( this.overviews.subscribers.lastMonthSubscribers < 0 ) ? 'fa-arrow-down' : 'fa-arrow-up'"></i> {{ this.overviews.subscribers.lastMonthSubscribers }}% </span><span
+                                        class="whitespace-nowrap">Since Last Month</span></p>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full lg:w-6/12 xl:w-3/12 px-4">
+                    <div  v-if="this.overviews !== null" class="w-full lg:w-6/12 xl:w-3/12 px-2 md:px-4">
                         <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
                             <div class="flex-auto p-4">
                                 <div class="flex flex-wrap">
-                                    <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
+                                    <div class="relative w-full pr-0 max-w-full flex-grow flex-1">
                                         <h5 class="text-blueGray-400 uppercase font-bold text-xs">SENT EMAIS</h5><span
-                                            class="font-semibold text-xl text-blueGray-700">924</span>
+                                            class="font-semibold text-xl text-blueGray-700">{{ this.overviews.sentEmails.format }}</span>
                                     </div>
                                     <div class="relative w-auto pl-4 flex-initial">
                                         <div
@@ -60,19 +60,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="text-sm text-blueGray-400 mt-4"><span class="mr-2 text-orange-500"><i
-                                            class="fas fa-arrow-down"></i> 1.10% </span><span
-                                        class="whitespace-nowrap">Since yesterday</span></p>
+                                <p class="text-sm text-blueGray-400 mt-4"><span class="mr-2 " :class="( this.overviews.sentEmails.lastMonthSentEmails < 0 ) ? 'text-red-500' : 'text-emerald-500'"><i
+                                            class="fas " :class="( this.overviews.sentEmails.lastMonthSentEmails < 0 ) ? 'fa-arrow-down' : 'fa-arrow-up'"></i> {{ this.overviews.sentEmails.lastMonthSentEmails }}% </span><span
+                                        class="whitespace-nowrap">Since Last Month</span></p>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full lg:w-6/12 xl:w-3/12 px-4">
+                    <div  v-if="this.overviews !== null" class="w-full lg:w-6/12 xl:w-3/12 px-2 md:px-4">
                         <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
                             <div class="flex-auto p-4">
                                 <div class="flex flex-wrap">
-                                    <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
+                                    <div class="relative w-full pr-0 max-w-full flex-grow flex-1">
                                         <h5 class="text-blueGray-400 uppercase font-bold text-xs">PERFORMANCE</h5>
-                                        <span class="font-semibold text-xl text-blueGray-700">49,65%</span>
+                                        <span class="font-semibold text-xl text-blueGray-700">{{ this.overviews.performance.format }}%</span>
                                     </div>
                                     <div class="relative w-auto pl-4 flex-initial">
                                         <div
@@ -81,9 +81,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="text-sm text-blueGray-400 mt-4"><span class="mr-2 text-emerald-500"><i
-                                            class="fas fa-arrow-up"></i> 12% </span><span class="whitespace-nowrap">Since
-                                        last month</span></p>
+                                  <p class="text-sm text-blueGray-400 mt-4"><span class="mr-2 " :class="( this.overviews.performance.lastMonthPerformance < 0 ) ? 'text-red-500' : 'text-emerald-500'"><i
+                                            class="fas " :class="( this.overviews.performance.lastMonthPerformance < 0 ) ? 'fa-arrow-down' : 'fa-arrow-up'"></i> {{ this.overviews.performance.lastMonthPerformance}}% </span><span
+                                        class="whitespace-nowrap">Since Last Month</span></p>
                             </div>
                         </div>
                     </div>
@@ -94,18 +94,31 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     name: 'Overview',
     data() {
         return {
-            overviews: [
-                {name: 'Traffic', figures: '350,000', duration: 'Since Last Month', change: 3.48},
-                {name: 'New Subscribers', figures: '350,000', duration: 'Since Last Month', change: 3.48},
-                {name: 'Sent Emails', figures: '924', duration: 'Since Yesterday', change: 1.01},
-                {name: 'Performance', figures: '49.5', duration: 'Since Last Month', change: 12},
-            ]
+            overviews: null
         }
-    }
+    },
+
+    methods: {
+        async getTrafficData() {
+            await axios.get('/overview/dashboard')
+                .then( res => {
+                    if ( res.status === 200 ) {
+                        this.overviews = res.data.data
+                    }
+                } )
+        }
+    },
+    mounted() {
+        this.getTrafficData()
+        setInterval(() => {
+            this.getTrafficData()
+        }, ( 1000 ) * 60);
+    }   
 }
 </script>
 

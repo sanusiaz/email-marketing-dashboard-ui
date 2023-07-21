@@ -76,9 +76,9 @@
                             <td class="px-4 py-3 text-sm">
                                 <div class="flex gap-1 w-max">
                                     <!-- View Message Button -->
-                                    <span @click="viewMessage(campaign.id)"  class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-green-600 flex items-center justify-center hover:border-green-600 w-max m-auto relative  align-center bg-green-600 text-sm rounded-lg p-2"><i class="fas fa-eye"></i></span>
+                                    <span @click="viewMessage(campaign.id)"  class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-green-700 bg-green-100 rounded-full hover:bg-green-700 hover:text-green-100"><i class="fas fa-eye"></i></span>
                                     
-                                    <span @click="deleteCampaign(campaign.id)" class="text-white cursor-pointer transition-all duration-200 hover:duration-200 border border-transparent hover:bg-white hover:text-red-600 hover:border-red-600 w-max m-auto relative flex align-center justify-center bg-red-600 text-sm rounded-lg p-2">
+                                    <span @click="deleteCampaign(campaign.id)" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-red-700 bg-red-100 rounded-full hover:bg-red-700 hover:text-red-100">
                                         <i class="fas fa-trash-alt"></i>
                                     </span>
                                 </div>

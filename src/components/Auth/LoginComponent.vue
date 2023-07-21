@@ -94,14 +94,15 @@ export default {
 
                 } catch( error ) {
                     this.processingForm = false
+                    console.log(error)
+                    this.statusText = 'error'
 
+                    this.errorMessage = 'Internal Server Error'
                     if ( error.response.data.message !== undefined 
                         && error.response.data.message !== '' ) {
                         this.errorMessage = error.response.data.message
                     }
-                    else {
-                        this.errorMessage = 'Internal Server Error'
-                    }
+                    
                 }
 
             }
