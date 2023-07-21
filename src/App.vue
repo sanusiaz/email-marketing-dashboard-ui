@@ -21,17 +21,14 @@ export default {
 
 	async created() {
 
+		this.$router.push(window.location.pathname)
+
 
 		// Run this only once
 		if (localStorage.getItem('user') === null) {
 			try {
 				let __response = await axios.get('/user')
 				this.user = __response.data.data
-
-				if (__response.status === 401) {
-					alert('Users is not authorized')
-				}
-
 				localStorage.setItem('user', JSON.stringify(this.user))
 
 			} catch (error) {
@@ -41,7 +38,7 @@ export default {
 				localStorage.removeItem('loggedInTimeStamp')
 				// if there is any error redirect the user to login page 
 
-				console.log(this.$router.currentRoute._value.meta)
+				// console.log(this.$router.currentRoute._value.meta)
 				if (this.$router.currentRoute._value.meta.requiresAuth !== undefined) {
 					this.$router.push('/login')
 				}

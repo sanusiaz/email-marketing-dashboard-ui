@@ -41,7 +41,11 @@
 <script>
 
 // Please change this to the URL you want to redirect users after email verification
-const REDIRECTURLURL = 'https://google.com'
+// test 
+// const REDIRECTURLURL = 'https://google.com'
+
+// Live
+const REDIRECTURLURL = 'https://app.regnotradesmailer.com/'
 import axios from 'axios'
 import ButtonComponent from './ButtonComponent.vue'
 import InputComponent from './InputComponent.vue'

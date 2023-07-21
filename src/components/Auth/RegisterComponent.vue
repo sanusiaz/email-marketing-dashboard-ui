@@ -45,7 +45,12 @@
 <script>
 
 // Where to redirect when users account has been verified
-const REDIRECTURL = 'http://localhost:5173/login'
+// Test 
+// const REDIRECTURL = 'http://localhost:5173/login'
+
+// Live
+const REDIRECTURL = 'https://app.regnotradesmailer.com/login'
+
 
 import axios from 'axios'
 import ButtonComponent from './ButtonComponent.vue';
@@ -106,7 +111,6 @@ export default {
                     if ( error.response.data.message !== '' ) {
                         this.errorMessage = error.response.data.message
                     }
-                    console.log(error)
                 }
             }
             else {

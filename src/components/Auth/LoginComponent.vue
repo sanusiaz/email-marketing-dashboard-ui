@@ -94,7 +94,6 @@ export default {
 
                 } catch( error ) {
                     this.processingForm = false
-                    console.log(error)
                     this.statusText = 'error'
 
                     this.errorMessage = 'Internal Server Error'
