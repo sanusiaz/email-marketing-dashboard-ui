@@ -2,10 +2,10 @@ import './assets/css/styles.css'
 import axios from 'axios'
 
 // test base URL 
-// axios.defaults.baseURL = 'http://localhost:8007/api/v1'
+axios.defaults.baseURL = 'http://localhost:8007/api/v1'
 
 // Live Base URL 
-axios.defaults.baseURL = 'https://api.regnotradesmailer.com/api/v1'
+// axios.defaults.baseURL = 'https://api.regnotradesmailer.com/api/v1'
 
 // import './assets/plugins/tinymce/jquery.tinymce.min.js'
 // import './assets/plugins/tinymce/tinymce.min.js'
