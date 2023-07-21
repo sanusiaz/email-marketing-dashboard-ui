@@ -20,9 +20,7 @@ export default {
 	},
 
 	async created() {
-
-		this.$router.push(window.location.pathname)
-
+		// this.$router.push(window.location.pathname)
 
 		// Run this only once
 		if (localStorage.getItem('user') === null) {

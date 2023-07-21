@@ -5,9 +5,7 @@
             <div class="flex flex-wrap items-center md:justify-between justify-center">
                 <div class="w-full md:w-4/12 px-4">
                     <div class="text-sm text-blueGray-500 font-normal py-1 text-center md:text-left">
-                        Copyright © 2023 <a href="https://www.creative-tim.com?ref=vn-footer-admin"
-                            class="text-blueGray-500 hover:text-blueGray-700 text-sm font-normal py-1">
-                            Pixatech </a></div>
+                        Copyright © 2023</div>
                 </div>
                 <div class="w-full md:w-8/12 px-4">
                     <ul class="flex flex-wrap list-none md:justify-end justify-center">

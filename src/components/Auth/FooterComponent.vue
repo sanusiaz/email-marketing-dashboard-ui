@@ -12,7 +12,7 @@
                         <li>
                             <router-link to="/about" class="text-white hover:text-slate-300 text-sm font-semibold block py-1 px-3">About Us</router-link>
                         </li>
-                        <li><a href="https://pixatech.io/blog" target="_blank"
+                        <li><a href="#" target="_blank"
                                 class="text-white hover:text-slate-300 text-sm font-semibold block py-1 px-3">
                                 Blog </a></li>
                         <li>
@@ -25,9 +25,7 @@
                     <div
                         class="text-sm flex space-x-3 items-center align-middle text-slate-200 font-semibold py-1 text-center md:text-left">
                         <span>Copyright © 2023</span>
-                        <a href="https://pixatech.io" target="_blank"
-                            class="text-white hover:text-slate-300 text-sm font-semibold py-1">
-                            PixaTech </a>
+                       
                     </div>
                 </div>
             </div>
@@ -37,7 +35,18 @@
 
 <script>
 export default {
-    name: 'FooterComponent'
+    data() {
+        return {
+            origin: '',
+            hostname: ''
+        }
+    },
+    name: 'FooterComponent',
+
+    created() {
+        this.origin = window.location.origin
+        this.hostname = window.location.hostname
+    }
 }
 </script>
 
