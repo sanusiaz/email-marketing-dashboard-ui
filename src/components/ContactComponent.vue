@@ -26,9 +26,12 @@
         <!-- Contact Form  -->
     
         <section class="block relative pt-20 lg:pt-0 w-full">
-            <FormComponent containerClass="w-full p-4 py-0">
-                    
+            <FormComponent containerClass="w-full p-4 py-0">                    
                 <template v-slot:formData>
+                    <!-- Message -->
+                    <div class="font-semibold text-sm text-center text-red-600 pt-0 pb-5" v-if="this.errorMessage !== '' ">{{ this.errorMessage }}</div>
+                    <div class="font-semibold text-sm text-center text-green-600 pt-0 pb-5" v-if="this.successMessage !== '' && this.errorMessage === ''">{{ this.successMessage }}</div>
+
                     <InputComponent @inputData="setName" label="name" type="text" placeholder="Enter full name" />
                     <InputComponent @inputData="setEmail" label="email" type="email" placeholder="Enter a valid email address" />
                     <InputComponent @inputData="setPhone" label="phone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter your phone number" />
@@ -39,7 +42,6 @@
                     </div>
                 </template>
             </FormComponent>
-           
         </section>
     </div>
 </template>
@@ -48,7 +50,7 @@
 import FormComponent from './Auth/FormComponent.vue'
 import InputComponent from './Auth/InputComponent.vue'
 import ButtonComponent from './Auth/ButtonComponent.vue'
-import axioss from 'axios'
+import axios from 'axios'
 
 export default {
     name: "ContactComponent",
@@ -60,7 +62,9 @@ export default {
                 email: '',
                 message: '',
                 phone: ''
-            }
+            },
+            errorMessage: '',
+            successMessage: ''
         }
     },
     methods: {
@@ -78,9 +82,20 @@ export default {
         },
 
         async submitForm() {
-            console.log('This is where i will send response to send contact information with this data ', this.form)
-            // let __Response = await axios.post('https://test.jobscarriers.com/api/v1/jobs', this.form)
-            // console.log(__Response)
+            await axios.post('/contact', this.form)
+                .then((response) => {
+                    if ( response.status === 200 && response.statusText !== 'error' ) {
+                        this.successMessage = response.data.message
+                        this.form.name = this.form.email = this.form.message = this.form.phone = ''
+                    }
+                }).catch((error) => {
+                    if ( error.response.data.message !== undefined ) {
+                        this.errorMessage = error.response.data.message
+                    }
+                    else {
+                        this.errorMessage = 'An Error Occurred'
+                    }
+                })
         }
     }
 }
