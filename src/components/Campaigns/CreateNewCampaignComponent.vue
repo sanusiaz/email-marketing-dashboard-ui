@@ -306,7 +306,6 @@ export default {
 
 
                 } catch (error) {
-                    console.error(error)
                     this.statusText = 'error'
                     let serverErrorMessage = (error.request.response !== undefined
                         && error.request.response !== '') 
@@ -429,7 +428,6 @@ export default {
                 }
 
             } catch(error) {
-                console.log(error)
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message

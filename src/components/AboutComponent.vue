@@ -52,41 +52,10 @@
 import FormComponent from './Auth/FormComponent.vue'
 import InputComponent from './Auth/InputComponent.vue'
 import ButtonComponent from './Auth/ButtonComponent.vue'
-import axios from 'axios'
 
 export default {
     name: "AboutComponent",
-    components: { FormComponent, InputComponent, ButtonComponent },
-    data() {
-        return {
-            form: {
-                name: '',
-                email: '',
-                message: '',
-                phone: ''
-            }
-        }
-    },
-    methods: {
-        setName(value) {
-            this.form.name = value
-        },
-        setEmail(value) {
-            this.form.email = value
-        },
-        setMessage(value) {
-            this.form.message = value
-        },
-        setPhone(value) {
-            this.form.phone = value
-        },
-
-        async submitForm() {
-            console.log('This is where i will send response to send contact information with this data ', this.form)
-            // let __Response = await axios.post('https://test.jobscarriers.com/api/v1/jobs', this.form)
-            // console.log(__Response)
-        }
-    }
+    components: { FormComponent, InputComponent, ButtonComponent }
 }
 </script>
 
