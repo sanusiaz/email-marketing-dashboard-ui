@@ -30,40 +30,42 @@ export default {
         },
 
         parseCharts() {
-            new Chart(document.getElementById("line-chart"), {
-                type: 'line',
-                data: {
-                    labels: ['1st Day', '2nd Day', '3rd Day', '4th Day', '5th Day', '6th Day', '7th Day'],
-                    datasets: [{
-                        data: this.bounceRecords.smtpError,
-                        label: "SMTP Error",
-                        borderColor: "#3e95cd",
-                        fill: false
-                    }, {
-                        data: this.bounceRecords.failedEmails,
-                        label: "Failed Email",
-                        borderColor: "#c45850",
-                        fill: false
-                    }, {
-                        data: this.bounceRecords.queuedEmails,
-                        label: "Queued Emails",
-                        borderColor: "#3cba9f",
-                        fill: false
-                    }, {
-                        data: this.bounceRecords.processingEmails,
-                        label: "Processing Emails",
-                        borderColor: "#8e5ea2",
-                        fill: false
+            if ( Chart !== undefined && document.getElementById("line-chart") !== null ) {
+                new Chart(document.getElementById("line-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: ['1st Day', '2nd Day', '3rd Day', '4th Day', '5th Day', '6th Day', '7th Day'],
+                        datasets: [{
+                            data: this.bounceRecords.smtpError,
+                            label: "SMTP Error",
+                            borderColor: "#3e95cd",
+                            fill: false
+                        }, {
+                            data: this.bounceRecords.failedEmails,
+                            label: "Failed Email",
+                            borderColor: "#c45850",
+                            fill: false
+                        }, {
+                            data: this.bounceRecords.queuedEmails,
+                            label: "Queued Emails",
+                            borderColor: "#3cba9f",
+                            fill: false
+                        }, {
+                            data: this.bounceRecords.processingEmails,
+                            label: "Processing Emails",
+                            borderColor: "#8e5ea2",
+                            fill: false
+                        }
+                        ]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Showing Failed Emails, Smtp Error, Queued Emails, Processing Emails'
+                        }
                     }
-                    ]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Showing Failed Emails, Smtp Error, Queued Emails, Processing Emails'
-                    }
-                }
-            });
+                });
+            }
         }
     },
     

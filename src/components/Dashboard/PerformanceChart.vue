@@ -34,67 +34,69 @@ export default {
 
         },
         parseCharts() {
-            var ctx = document.getElementById('bar-chart').getContext('2d');
-            var chart = new Chart(ctx, {
+            if ( Chart !== undefined && document.getElementById('bar-chart') !== null ) {
+                var ctx = document.getElementById('bar-chart').getContext('2d');
+                var chart = new Chart(ctx, {
 
-                type: 'bar',
+                    type: 'bar',
 
-                data: {
-                    labels: ["Jan", "Feb", "March", "April", "May", "June", "Jully", "Aug", "Sept", "Oct", "Nove", "Dec"],
-                    datasets: [{
-                        label: "Delivered Emails",
-                        backgroundColor: 'rgba(245,34,34,.5)',
-                        borderColor: 'rgba(245,34,34,1)',
-                        data: this.sentEmails,
-                    }]
-                },
-
-                options: {
-                    responsive: true,
-                    title: {
-                        display: false,
-                        text: 'Showing Sent Emails Delivered to Inbox'
-                    },
-                    tooltips: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    hover: {
-                        mode: 'nearest',
-                        intersect: true,
-                    },
-                    scales: {
-                        xAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Months'
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            },
-                            display: true,
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Sent Emails'
-                            }
-
+                    data: {
+                        labels: ["Jan", "Feb", "March", "April", "May", "June", "Jully", "Aug", "Sept", "Oct", "Nove", "Dec"],
+                        datasets: [{
+                            label: "Delivered Emails",
+                            backgroundColor: 'rgba(245,34,34,.5)',
+                            borderColor: 'rgba(245,34,34,1)',
+                            data: this.sentEmails,
                         }]
+                    },
+
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: false,
+                            text: 'Showing Sent Emails Delivered to Inbox'
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true,
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Months'
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                },
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Sent Emails'
+                                }
+
+                            }]
+                        }
                     }
+                });
+                var mediaQuery = window.matchMedia('(min-width: 768px)');
+
+                function toggleAspectRatio(mq) {
+                    chart.options.maintainAspectRatio = mq.matches;
+                    chart.resize();
                 }
-            });
-            var mediaQuery = window.matchMedia('(min-width: 768px)');
 
-            function toggleAspectRatio(mq) {
-                chart.options.maintainAspectRatio = mq.matches;
-                chart.resize();
+                toggleAspectRatio(mediaQuery);
+
+                mediaQuery.addListener(toggleAspectRatio);
             }
-
-            toggleAspectRatio(mediaQuery);
-
-            mediaQuery.addListener(toggleAspectRatio);
         }
     },
     mounted() {
