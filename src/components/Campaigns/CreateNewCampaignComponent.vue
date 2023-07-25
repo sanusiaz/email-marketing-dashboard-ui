@@ -411,6 +411,7 @@ export default {
             this.statusText = this.popupMessage = ''
             this.processingForm = true
             try {   
+                console.log(this.formData)
                 let __response = await axios.post('/campaigns', this.formData)
 
                 if ( __response.status === 201 && __response.statusText !== 'error'  ) {
@@ -428,9 +429,12 @@ export default {
                 }
 
             } catch(error) {
+                console.error(error)
                 this.statusText = 'error'
-                let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
-                this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
+                this.popupMessage = (  
+                    error.request.response !== undefined && 
+                    error.request.response !== "" && 
+                    error.request.response.message !== undefined ) ?  JSON.parse(error.request.response).message : error.message
             }
             
             this.processingForm = false

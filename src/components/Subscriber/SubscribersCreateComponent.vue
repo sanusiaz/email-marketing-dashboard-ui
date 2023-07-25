@@ -28,18 +28,23 @@
                 
 
                 <!-- Submit Button -->
-
-                <button @click.prevent="submitForm()" type="submit"
-                    class="text-sm bg-blue-700 w-max rounded-md duration-200 hover:duration-200 hover:bg-slate-700 font-Inter font-semibold text-white text-center p-3 px-5">
-                    <span>Save</span>
-
-                </button>
+                 <ButtonComponent  @click.prevent="submitForm()" type="submit"
+                    class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
+                        <div class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-full h-full relative top-0 left-0 right-0">
+                            <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg> {{  ( this.processingForm  ) ? 'Processing' : 'Save'  }}
+                        </div>
+                    </ButtonComponent>
             </div>
         </template>
     </FormComponent>
 </template>
 
 <script>
+
+import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
 import axios from 'axios'
 import 'simplebar'; // or "import SimpleBar from 'simplebar';" if you want to use it manually.
 import 'simplebar/dist/simplebar.css'
@@ -56,7 +61,8 @@ export default {
             formData: {
                 name: '',
                 email: '',
-            }
+            },
+            processingForm: false
         }
     },
 
@@ -69,6 +75,7 @@ export default {
         async submitForm() {
             this.$emit('getMessage', '')
             this.$emit('getStatusText', '')
+            this.processingForm = true
             await axios.post('/subscribers', this.formData)
                 .then(response => {
                     if ( response.status === 201 ) {                        
@@ -78,12 +85,14 @@ export default {
 
                         this.$emit('getMessage', response.data.message)
                         this.$emit('getStatusText', 'success')
+
+                        this.$emit('closeComponent', 'true')
+                        this.processingForm = true
                     }
-                    console.log(response)
                 }).catch(error => {
-                    console.error(error)
                     this.$emit('getMessage', error.response.data.message)
                     this.$emit('getStatusText', 'error')
+                    this.processingForm = true
                 })
         },
 
@@ -91,7 +100,8 @@ export default {
             this.$emit("update:modelValue", e.target.value);
         }
     },
-    components: { FormComponent },
+    components: {
+    ButtonComponent, FormComponent },
    
 }
 </script>

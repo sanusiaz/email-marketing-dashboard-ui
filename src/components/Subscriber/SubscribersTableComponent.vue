@@ -12,20 +12,18 @@
                 class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
                 View all Subscribers</ButtonComponent>
 
-
-
-            <div class="flex py-2 space-x-3 gap-2">
-                <ButtonComponent 
-                    @click="this.importedComponent = 'WelcomeEmailComponent'"
-                    class="px-5 hover:border-slate-600 hover:text-slate-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-slate-600 text-white">
-                    Set Welcome Email</ButtonComponent>
-
-
+                <div class="flex py-2 space-x-3 gap-2">
                     <ButtonComponent 
-                        @click="this.importedComponent = 'UnsubscribeEmailComponent'"
-                    class="px-5 hover:border-slate-600 hover:text-slate-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-slate-600 text-white">
-                    Set Unsubscribe Message</ButtonComponent>
-            </div>
+                        @click="this.importedComponent = 'WelcomeEmailComponent'"
+                        class="px-5 hover:border-slate-600 hover:text-slate-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-slate-600 text-white">
+                        Set Default Welcome Email</ButtonComponent>
+
+
+                        <ButtonComponent 
+                            @click="this.importedComponent = 'UnsubscribeEmailComponent'"
+                        class="px-5 hover:border-slate-600 hover:text-slate-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-slate-600 text-white">
+                        Set Default Unsubscribe Message</ButtonComponent>
+                </div>
             
         </div>
 
@@ -36,7 +34,7 @@
                 :href="createNewSubscriberLink" target="_blank">{{ createNewSubscriberLink }}</a></span>
 
         <div class="md:p-3 md:pb-0">
-            <component :templates="templates" @getTitle="setTitle" @getMessage="setMessage" @getStatusText="setStatusText" :is="this.importedComponent" @createSubscriberLink="setSubscribersCreateLink"></component>
+            <component :templates="templates" @getTitle="setTitle" @getMessage="setMessage" @getStatusText="setStatusText" @closeComponent="closeComponent" :is="this.importedComponent" @createSubscriberLink="setSubscribersCreateLink"></component>
         </div>
     </div>
 </template>
@@ -65,6 +63,12 @@ export default {
             this.$emit('getStatusText', value);
 
         },
+
+        closeComponent(value) {
+            if ( value === 'true' ) {
+                this.importedComponent = 'SubscribersAllComponents'
+            }
+        },  
 
         setSubscribersCreateLink(value) {
             if ( value !== "" ) {

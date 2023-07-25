@@ -21,7 +21,7 @@
 
         <ButtonComponent class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 block my-2 text-white" @click="this.formMainComponent = 'CreateNewListsCampaign'; this.listsRequestType = 'create'">Create New Lists</ButtonComponent>
 
-        <section data-simplebar class="flex flex-col spaxe-x-3 py-4">
+        <section v-if="this.foldersLists.length > 0" data-simplebar class="flex flex-col spaxe-x-3 py-4">
             <div class="w-full overflow-x-auto">
 
 
@@ -74,6 +74,10 @@
                 </table>
             </div>
         </section>
+
+         <div v-else class="text-gray-600 text-2xl h-[200px] flex place-content-center place-items-center">
+            No Record Found
+        </div>
     </div>
 
     <!-- Popup Message -->

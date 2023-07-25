@@ -23,7 +23,7 @@
        
 
 
-        <section data-simplebar class="flex flex-col h-[500px] overflow-auto spaxe-x-3 py-4">
+        <section v-if="this.campaigns.length > 0" data-simplebar class="flex flex-col h-[500px] overflow-auto spaxe-x-3 py-4">
             <div class="w-full overflow-x-auto">
 
 
@@ -88,6 +88,10 @@
                 </table>
             </div>
         </section>
+
+        <div v-else class="text-gray-600 text-2xl h-[200px] flex place-content-center place-items-center">
+            No Record Found
+        </div>
     </div>
 
 
