@@ -15,7 +15,7 @@
         <i class="fas fa-sign-out-alt"></i>
         <span>Logout</span>
     </router-link>
-    <a href=""
+    <a href="https://buymeacoffee.com/sanusiaz" target="_blank"
         class="text-gray-100 space-x-3 font-Inter text-sm transition-all duration-150 hover:duration-150 hover:bg-green-700 rounded-lg w-full p-3 py-2 bg-green-500 hidden md:block">
         <i class="fas fa-donate"></i>
         <span>Donate</span>
