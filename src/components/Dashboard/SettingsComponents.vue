@@ -299,7 +299,7 @@
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg> 
                                 <span class="text-center font-Inter">
-                                    {{  ( this.processingForm  ) ? 'Processing' : 'Save Config'  }}
+                                    {{  ( this.processingForm  ) ? 'Processing...' : 'Test & Save Config'  }}
                                 </span>
                             </div>
                         </ButtonComponent>
@@ -329,13 +329,9 @@ import axios from 'axios'
 import Overview from './Overview.vue'
 import SocialTraffic from './SocialTraffic.vue'
 import PageVisits from './PageVisits.vue'
-
 import CombinedCharts from './CombinedCharts.vue'
-
 import PopupMessageComponent from '../PopupMessageComponent.vue'
-
 import ButtonComponent from '../Auth/ButtonComponent.vue'
-
 import UploadImage from '../UploadImage.vue'
 
 export default {
@@ -377,7 +373,6 @@ export default {
             },
             showEmailConfig: false,
             statusText: '',
-            messageComponent: '',
             popupMessage: ''
         }
     },
@@ -444,7 +439,6 @@ export default {
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
-                this.messageComponent = 'PopupMessageComponent'
             })
         
        
@@ -455,14 +449,13 @@ export default {
     methods: {
         async saveSettings() {
             this.processingForm = true
-            this.messageComponent = this.statusText =  ''
+            this.popupMessage = this.statusText =  ''
             await axios.put('/settings', this.formData)
             .then(response => {
                 if ( response.statusText !== 'error' && response.status === 201 ) {
                     this.statusText = 'success'
                     let serverSuccessMessage = response.data.message
                     this.popupMessage = ( serverSuccessMessage !== undefined ) ? serverSuccessMessage : 'Updated Successfully'
-                    this.messageComponent = 'PopupMessageComponent'
                 }
 
                 this.processingForm = false
@@ -472,24 +465,31 @@ export default {
                 this.statusText = 'error'
                 let serverErrorMessage = (error.response.data.message !== "" &&  error.response.data.message !== undefined) ? error.response.data.message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : 'Error: Please Contact Site Admin'
-                this.messageComponent = 'PopupMessageComponent'
             })
             
         },
 
+        /**
+         * Save Email Config
+         */
         async saveConfig() {
-            this.messageComponent = this.statusText =  ''
+            this.processingForm = true
+            this.popupMessage = this.statusText =  ''
             await axios.post('/settings/config', this.formData.config)
                 .then(response => {
+                    console.log('Email COnfig Settings')
+                    console.log(response)
                     this.statusText = 'success'
                     let serverSuccessMessage = response.data.message
                     this.popupMessage = ( serverSuccessMessage !== undefined ) ? serverSuccessMessage : 'Updated Successfully'
-                    this.messageComponent = 'PopupMessageComponent'
+                    this.processingForm = false
                 }).catch( error => {
+                    console.error(error)
                     this.statusText = 'error'
                     let serverErrorMessage = (error.response.data.message !== "" &&  error.response.data.message !== undefined) ? error.response.data.message : 'Internal Server Error'
                     this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : 'Error: Please Contact Site Admin'
-                    this.messageComponent = 'PopupMessageComponent'
+
+                    this.processingForm = false
                 } )
         },
 
