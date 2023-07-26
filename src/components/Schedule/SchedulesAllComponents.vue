@@ -6,7 +6,7 @@
             <table class="w-full whitespace-no-wrap">
                 <thead>
                     <tr
-                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50 ">
                         <th class="px-4 py-3">Id</th>
                         <th class="px-4 py-3">Subject</th>
                         <th class="px-4 py-3">Sent to</th>
@@ -15,8 +15,8 @@
                         <th class="px-4 py-3">Edit/Delete</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    <tr v-for="(schedule, index) in schedules" :key="schedule.id" class="text-gray-700 dark:text-gray-400">
+                <tbody class="bg-white divide-y">
+                    <tr v-for="(schedule, index) in schedules" :key="schedule.id" class="text-gray-700 ">
                         <td class="px-4 py-3">{{ index+1 }}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center text-sm">
@@ -28,7 +28,7 @@
                         </td>
                         <td class="px-4 py-3 text-xs">
                             <span
-                                class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp;
+                                class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full  single_mail">&nbsp;
                                 {{ (schedule.isQueued) ? 'Queued...' : 'Created...' }}
                             </span>
                         </td>

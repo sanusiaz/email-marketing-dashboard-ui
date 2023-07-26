@@ -30,7 +30,7 @@
                 <table class="w-full whitespace-no-wrap">
                     <thead>
                         <tr
-                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
                             <th class="px-4 py-3">Id</th>
                             <th class="px-4 py-3">Name</th>
                             <th class="px-4 py-3">Sent to</th>
@@ -40,8 +40,8 @@
                             <th class="px-4 py-3">View/Delete</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        <tr v-for="(newsletter, index) in newsletters" :key="newsletter.id" class="text-gray-700 dark:text-gray-400">
+                    <tbody class="bg-white divide-y ">
+                        <tr v-for="(newsletter, index) in newsletters" :key="newsletter.id" class="text-gray-700">
                             <td class="px-4 py-3">{{ index +1 }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center text-sm">
@@ -49,18 +49,18 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-xs">
-                                <span class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-green-100">{{ newsletter.sentTo }}</span>
+                                <span class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full ">{{ newsletter.sentTo }}</span>
                                 
                             </td>
                             <td class="px-4 py-3 text-xs">
-                                <span v-if="newsletter.lists !== null" class="px-2 py-1 font-semibold leading-tight capitalize text-yellow-700 bg-blue-100 rounded-full dark:bg-blue-700 dark:text-green-100">{{ newsletter.lists }}</span>
-                                <span v-else class="px-2 py-1 font-semibold leading-tight capitalize text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-green-100">Invalid Lists</span>
+                                <span v-if="newsletter.lists !== null" class="px-2 py-1 font-semibold leading-tight capitalize text-yellow-700 bg-blue-100 rounded-full ">{{ newsletter.lists }}</span>
+                                <span v-else class="px-2 py-1 font-semibold leading-tight capitalize text-red-700 bg-red-100 rounded-full">Invalid Lists</span>
                                 
                             </td>
                             <td class="px-4 py-3 text-xs">
                                 
                                 <span
-                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail">&nbsp; {{ newsletter.status }}
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full single_mail">&nbsp; {{ newsletter.status }}
                             </span>
                             </td>
                             <td class="px-4 py-3 text-sm">

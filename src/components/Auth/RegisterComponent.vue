@@ -49,7 +49,8 @@
 // const REDIRECTURL = 'http://localhost:5173/login'
 
 // Live
-const REDIRECTURL = 'https://app.regnotradesmailer.com/login'
+// const REDIRECTURL = 'https://app.regnotradesmailer.com/login'
+const REDIRECTURL = 'https://mailer.jobscarriers.com'
 
 
 import axios from 'axios'

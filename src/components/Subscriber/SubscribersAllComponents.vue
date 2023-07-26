@@ -6,7 +6,7 @@
             <table class="w-full whitespace-no-wrap">
                 <thead>
                     <tr
-                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                        class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b  bg-gray-50 ">
                         <th class="px-4 py-3">Id</th>
                         <th class="px-4 py-3">Name</th>
                         <th class="px-4 py-3">Email</th>
@@ -15,8 +15,8 @@
                         <th class="px-4 py-3">Send Message</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                    <tr v-for="(subscriber, index) in subscribers" :key="subscriber.id" class="text-gray-700 dark:text-gray-400">
+                <tbody class="bg-white divide-y">
+                    <tr v-for="(subscriber, index) in subscribers" :key="subscriber.id" class="text-gray-700 ">
                         <td class="px-4 py-3">{{ index+1 }}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center text-sm">
@@ -28,7 +28,7 @@
                         </td>
                         <td class="px-4 py-3 text-xs">
                             <span
-                                class="px-2 py-1 font-semibold leading-tight rounded-full dark:bg-green-700 dark:text-green-100 single_mail" :class="( subscriber.unSubscribed ) ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ">&nbsp;
+                                class="px-2 py-1 font-semibold leading-tight rounded-full   single_mail" :class="( subscriber.unSubscribed ) ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ">&nbsp;
                                 {{ (subscriber.unSubscribed) ? 'unSubscribed' : 'Subscribed' }}
                             </span>
                         </td>
@@ -39,7 +39,7 @@
                         <td class="px-4 py-3 text-left text-xs">
                             <!-- Message Button -->
                             <a :href="subscriber.id" @click="this.loadSingleEmailPopup = true; this.singleEmail = subscriber.email; this.FormComponent = 'SingleSubscriberMailComponent'" title="click to view template used"
-                                class="px-2 py-1 font-semibold cursor-pointer hover:underline leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100 single_mail"><i
+                                class="px-2 py-1 font-semibold cursor-pointer hover:underline leading-tight text-green-700 bg-green-100 rounded-full single_mail"><i
                                     class="fas fa-paper-plane"></i>&nbsp; Message </a>
                         </td>
 

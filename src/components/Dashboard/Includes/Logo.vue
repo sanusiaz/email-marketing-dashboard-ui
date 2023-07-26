@@ -10,7 +10,7 @@
         name: 'Logo',
         data() {
             return {
-                title: 'Site Title'
+                title: 'Free Version'
             }
         },
         props: {

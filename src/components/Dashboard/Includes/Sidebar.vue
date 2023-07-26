@@ -11,8 +11,8 @@ import Nav from './Nav.vue'
             return {
                 navigation: [
                     {name: 'dashboard', icon: 'fas fa-home', toName:'admin-dashboard'},
-                    {name: 'analytics', icon: 'fas fa-chart-bar', toName:'admin-analytics'},
-                    {name: 'surveys', icon: 'fas fa-poll-h', toName:'admin-surveys'},
+                    // {name: 'analytics', icon: 'fas fa-chart-bar', toName:'admin-analytics'},
+                    // {name: 'surveys', icon: 'fas fa-poll-h', toName:'admin-surveys'},
                     {name: 'campaign', icon: 'fas fa-funnel-dollar', toName:'admin-campaign'},
                     {name: 'subscribers', icon: 'fas fa-users', toName: 'admin-subscribers'},
                     {name: 'lists', icon: 'fas fa-folder', toName:'admin-lists'},

@@ -49,7 +49,7 @@ import axios from 'axios'
             let __that = this
             $('body').keypress(function (e) {
                 if ( e.originalEvent.key !== '/' ) {
-                    console.log(e.originalEvent )
+                    // console.log(e.originalEvent )
                 }
                 else {
                     __showsearchResults = 'skksksksk'

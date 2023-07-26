@@ -45,7 +45,10 @@
 // const REDIRECTURLURL = 'https://google.com'
 
 // Live
-const REDIRECTURLURL = 'https://app.regnotradesmailer.com/'
+// const REDIRECTURLURL = 'https://app.regnotradesmailer.com/'
+
+const REDIRECTURL = 'https://mailer.jobscarriers.com'
+
 import axios from 'axios'
 import ButtonComponent from './ButtonComponent.vue'
 import InputComponent from './InputComponent.vue'

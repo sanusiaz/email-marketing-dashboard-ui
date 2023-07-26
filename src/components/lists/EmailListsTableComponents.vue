@@ -28,7 +28,7 @@
                 <table class="w-full whitespace-no-wrap">
                     <thead>
                         <tr
-                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
                             <th class="px-4 py-3">Id</th>
                             <th class="px-4 py-3">Folder Name</th>
                             <th class="px-4 py-3">Total Emails</th>
@@ -37,8 +37,8 @@
                             <th class="px-4 py-3">Delete</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        <tr v-for="(folder, index) in foldersLists" :key="folder.folderRef" class="text-gray-700 text-sm dark:text-gray-400">
+                    <tbody class="bg-white divide-y">
+                        <tr v-for="(folder, index) in foldersLists" :key="folder.folderRef" class="text-gray-700 text-sm">
                             <td class="px-4 py-3">{{ index+1 }}</td>
                             <td class="px-4 py-3 capitalize">
                                 {{ folder.name }}
@@ -53,7 +53,7 @@
                             <td class="px-4 py-3 text-left text-xs">
                                 <!-- View Template Button -->
                                 <span :folderRef="folder.folderRef" @click="getAllEmails(folder.folderRef)"
-                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full cursor-pointer dark:bg-green-700 dark:text-green-100 single_mail"><i
+                                    class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full cursor-pointer single_mail"><i
                                         class="fas fa-eye"></i>&nbsp; View Emails </span>
                             </td>
 
