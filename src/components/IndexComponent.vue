@@ -18,7 +18,7 @@
 
 
     <!-- Smtp Error Popup Message -->
-    <div v-if="hasSmtp" class="fixed top-0 right-0 flex place-content-center place-items-center h-screen w-full" style="z-index: 99999; background: #cfc9c996;  backdrop-filter: blur(10px);
+    <div v-if="!hasSmtp" class="fixed top-0 right-0 flex place-content-center place-items-center h-screen w-full" style="z-index: 99999; background: #cfc9c996;  backdrop-filter: blur(10px);
 ">
         <div class="lg:w-[500px] flex flex-col gap-3">
             <span class="text-black font-Inter font-semibold text-3xl text-center flex gap-2 items-center">
@@ -59,18 +59,15 @@ export default {
 
     methods: {
         async checkSmtp(name) {
+            this.hasSmtp = true
             if ( name !== "admin-settings" ) {
                 // check if the user have smtp setup successfully
-                this.hasSmtp = false
                 let __response = await axios.get('/check/smtp')
-                if ( __response.status === 200 && __response.statusText !== 'error' ) {
-                    if ( __response.data.count !== null && __response.data.count > 0 ) {
-                        this.hasSmtp = true
+                if ( __response.status === 200 ) {
+                    if ( __response.data.count < 1 ) {
+                        this.hasSmtp = false
                     }
                 }
-            }
-            else {
-                this.hasSmtp = false
             }
         },
     },
@@ -80,7 +77,7 @@ export default {
             activeSidebar: '',
             profilePicsURL: '',
             loadAllLayouts: false,
-            hasSmtp: false
+            hasSmtp: true
         }
     },
 
@@ -97,13 +94,8 @@ export default {
                 this.loadAllLayouts = false
             }
 
-            if ( to.name!== 'admin-settings' ) {
-                this.checkSmtp(to.name)
-            }
-            else {
-                this.hasSmtp = false
-            }
-
+            this.checkSmtp(to.name)
+            
             this.title = (to.meta.title !== undefined) ? to.meta.title : this.title
             this.activeSidebar = (to.meta.title !== undefined) ? to.meta.activeSidebar : this.title
 

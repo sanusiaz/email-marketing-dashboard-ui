@@ -29,16 +29,16 @@
                         <td class="px-4 py-3 text-xs">
                             <span
                                 class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full  single_mail">&nbsp;
-                                {{ (schedule.isQueued) ? 'Queued...' : 'Created...' }}
+                                {{ schedule.status }}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            {{ schedule.updatedAt }}
+                            {{ schedule.scheduledDate }}
                         </td>
 
                         <td class="px-4 py-3 text-left text-xs flex  gap-1">
 
-                            <router-link title="Edit Schedule" :to="{ name: 'admin-schedule-show', params: {id: schedule.id} }" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-yellow-700 bg-yellow-100 rounded-full hover:bg-yellow-700 hover:text-yellow-100"><i class="fas fa-pen"></i></router-link>
+                            <router-link v-if="schedule.status !== 'Delivered' && schedule.status !== 'Qeuued'" title="Edit Schedule" :to="{ name: 'admin-schedule-show', params: {id: schedule.id} }" class="w-[28px] h-[28px] flex align-middle items-center justify-center font-semibold cursor-pointer leading-tight text-yellow-700 bg-yellow-100 rounded-full hover:bg-yellow-700 hover:text-yellow-100"><i class="fas fa-pen"></i></router-link>
                             
                             <span 
                                 @click="deleteSchedule(schedule.id)" title="Delete Selected Schedule"
@@ -83,7 +83,6 @@ export default {
                     })
                 }
             } catch( error ) {
-                console.error(error)
                 this.$emit('getMessage', error.response.data.message)
                 this.$emit('getStatusText', 'error')
             }
@@ -93,14 +92,11 @@ export default {
     async created() {
         await axios.get('/schedule')
             .then(res => {
-                console.log(res)
                 if ( res.status === 200 ) {
                     this.schedules = res.data.data
-                    console.log(res.data.data)
                 }
             })
             .catch( error => {
-                console.error(error)
                 this.$emit('getMessage', error.response.data.message)
                 this.$emit('getStatusText', 'error')
             })

@@ -129,7 +129,6 @@ export default {
 
                 }
             } catch( error ) {
-                console.error(error)
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
@@ -146,7 +145,6 @@ export default {
             try {
 
                 let __response = await axios.get('/lists');
-                console.log(__response)
                 if ( __response.status === 200 && __response.statusText !== 'error' ) {
                     if ( Array.isArray( __response.data.data ) ) {
                         this.foldersLists = __response.data.data;
@@ -156,7 +154,6 @@ export default {
                     }
                 }
             } catch( error ) {
-                console.error(error)
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
@@ -174,7 +171,6 @@ export default {
                     this.formMainComponent = 'ViewEmailsComponent'
 
                 }).catch((error) => {
-                    console.error(error)
                     this.statusText = 'error'
                     let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                     this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
@@ -203,7 +199,6 @@ export default {
                 this.messageComponent = 'PopupMessageComponent'
 
             }).catch((error) => {
-                console.error(error)
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message

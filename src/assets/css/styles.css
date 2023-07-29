@@ -3501,10 +3501,10 @@ video {
 .tox.tox-tinymce {
   margin: 0px !important;
 }
-
+/* 
 .tox.tox-tinymce:not(.tox-fullscreen) {
   height: 500px !important;
-}
+} */
 
 .tox-fullscreen {
   height: 100% !important;

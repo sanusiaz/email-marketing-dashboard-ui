@@ -81,7 +81,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Home',
-      activeSidebar: 'dashboard'
+      activeSidebar: 'dashboard',
+      checkSmtp: true
     }
   },
   {
@@ -92,7 +93,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Analytics',
-      activeSidebar: 'analytics'
+      activeSidebar: 'analytics',
+      checkSmtp: true
     }
   },
   {
@@ -103,7 +105,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Survey',
-      activeSidebar: 'surveys'
+      activeSidebar: 'surveys',
+      checkSmtp: true
     }
   },
   {
@@ -114,7 +117,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Campaign',
-      activeSidebar: 'campaign'
+      activeSidebar: 'campaign',
+      checkSmtp: true
     }
   },
   {
@@ -125,7 +129,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Lists',
-      activeSidebar: 'lists'
+      activeSidebar: 'lists',
+      checkSmtp: true
     }
   },
   {
@@ -136,7 +141,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Newsletter',
-      activeSidebar: 'newsletter'
+      activeSidebar: 'newsletter',
+      checkSmtp: true
     }
   },
   {
@@ -147,7 +153,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Newsletter',
-      activeSidebar: 'newsletter'
+      activeSidebar: 'newsletter',
+      checkSmtp: true
     }
   },
   {
@@ -158,7 +165,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Newsletter',
-      activeSidebar: 'newsletter'
+      activeSidebar: 'newsletter',
+      checkSmtp: true
     }
   },
 
@@ -170,7 +178,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Newsletter',
-      activeSidebar: 'newsletter'
+      activeSidebar: 'newsletter',
+      checkSmtp: true
     }
   },
 
@@ -180,7 +189,8 @@ const routes = [
     component: NewsLetterMessageView,
     meta: {
       requiresAuth: true,
-      Applayouts: false
+      Applayouts: false,
+      checkSmtp: true
     }
   },
   {
@@ -191,7 +201,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Schedule',
-      activeSidebar: 'schedule'
+      activeSidebar: 'schedule',
+      checkSmtp: true
     }
   },
 
@@ -203,7 +214,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Schedule',
-      activeSidebar: 'schedule'
+      activeSidebar: 'schedule',
+      checkSmtp: true
     }
   },
   {
@@ -214,7 +226,7 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Settings',
-      activeSidebar: 'settings'
+      activeSidebar: 'settings',
     }
   },
   {
@@ -225,7 +237,8 @@ const routes = [
       requiresAuth: true,
       Applayouts: true,
       title: 'Subscribers',
-      activeSidebar: 'subscribers'
+      activeSidebar: 'subscribers',
+      checkSmtp: true
     }
   },
   {

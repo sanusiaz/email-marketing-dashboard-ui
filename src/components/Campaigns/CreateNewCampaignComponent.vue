@@ -229,9 +229,7 @@ import InputComponent from '@/components/FormsComponents/InputComponent.vue'
 import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 
 import axios from 'axios'
-
-// // // Users can click to schedule this campaign instead
-// NB: Social media links will come from the profile, Logo same, Company Name Same
+import InitTinyMce from '../../services/InitTinyMce'
 
 export default {
     name: 'CreateNewCampaignComponent',
@@ -278,7 +276,7 @@ export default {
 
             this.popupMessage = ''
             this.statusText = ''
-            this.initTinyMce()
+            InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
 
             this.formData.template = templateId
             this.statusText = this.popupMessage = ''
@@ -297,7 +295,7 @@ export default {
                     if (__contents.status === 200) {
                         
                         this.formData.message = __contents.data
-                        this.initTinyMce()
+                        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
                         this.popupMessage = 'Template has been selected'
                         this.statusText = 'success'
 
@@ -347,71 +345,10 @@ export default {
             }
         },
 
-
-        initTinyMce() {
-            tinymce.remove();
-
-            var component = this.formData;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        component.message = editor.getContent();
-                    });
-                    // component.objTinymce = editor;
-                    if ( component.message !== null && component.message !== '' ) {
-                        editor.setContent(component.message)
-                    }
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
-        },
-
         async submit() {
             this.statusText = this.popupMessage = ''
             this.processingForm = true
             try {   
-                console.log(this.formData)
                 let __response = await axios.post('/campaigns', this.formData)
 
                 if ( __response.status === 201 && __response.statusText !== 'error'  ) {
@@ -419,25 +356,19 @@ export default {
                     this.statusText = 'success'
                     this.popupMessage = __response.data.message
 
-
                     // close form 
                     this.$emit('closeForm', true)
-                    // This line below will only send created data 
-                    // so it will be added at the top instead of reloading 
-                    // the campaign data/component
-                    // this.$emit('closeForm', __response.data.data)
                 }
 
+                this.processingForm = false
+
             } catch(error) {
-                console.error(error)
                 this.statusText = 'error'
-                this.popupMessage = (  
-                    error.request.response !== undefined && 
-                    error.request.response !== "" && 
-                    error.request.response.message !== undefined ) ?  JSON.parse(error.request.response).message : error.message
+                this.popupMessage  = ( error.response.data.message !== undefined ) ? 
+                error.response.data.message : 'Internal Server Error'
+                this.processingForm = false
             }
             
-            this.processingForm = false
         },
 
         setEmailLists(value) {

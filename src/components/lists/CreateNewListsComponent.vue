@@ -161,12 +161,8 @@ export default {
 
                 }
 
-                console.log(__response)
-
-
             } catch (error) {
                 error = JSON.parse(error.response.request.response)
-                console.error(error.message)
                 this.statusText = 'error'
                 this.popupMessage = error.message
             }

@@ -1,48 +1,83 @@
-
-// Todo: 
-// Add a method to handle Image Upload from TinyMCE Editor
-// Add a method to setTheContent 
-// Add a method to getTheContent
-
 class InitTinyMce {
+  example_image_upload_handler(blobInfo, success, failure, progress) {
+    if (blobInfo !== undefined) {
+      var xhr, formData;
 
-  /**
-   * Init Tiny Mce Editor
-   * 
-   * Make Cure the FormData Param comes with message 
-   * i.e FormData.message
-   * @param {Object} formData 
-   */
-  init(formData, tinymce, boxSelector = "textarea#message", width="100%", height="700px" ) {
+      xhr = new XMLHttpRequest();
+      xhr.withCredentials = false;
+      xhr.open("POST", "postAcceptor.php");
+
+      xhr.upload.onprogress = function (e) {
+        progress((e.loaded / e.total) * 100);
+      };
+
+      xhr.onload = function () {
+        var json;
+
+        if (xhr.status === 403) {
+          failure("HTTP Error: " + xhr.status, { remove: true });
+          return;
+        }
+
+        if (xhr.status < 200 || xhr.status >= 300) {
+          failure("HTTP Error: " + xhr.status);
+          return;
+        }
+
+        json = JSON.parse(xhr.responseText);
+
+        if (!json || typeof json.location != "string") {
+          failure("Invalid JSON: " + xhr.responseText);
+          return;
+        }
+
+        success(json.location);
+      };
+
+      xhr.onerror = function (error) {
+        failure(
+          "Image upload failed due to a XHR Transport error. Code: " +
+            xhr.status
+        );
+      };
+
+      formData = new FormData();
+      formData.append("file", blobInfo.blob(), blobInfo.filename());
+
+      xhr.send(formData);
+    }
+  }
+
+  initTinyMce(selector = "textarea#message", formData, target = "") {
     tinymce.remove();
 
-    let component = formData;
+    var component = formData;
     // Tiny MCE Free Init
     tinymce.init({
-      selector: boxSelector,
-      target: this.$el,
+      selector: selector,
+      target: target,
       init_instance_callback: function (editor) {
         editor.on("Change KeyUp Undo Redo", function (e) {
           component.message = editor.getContent();
         });
-        // component.objTinymce = editor;
+
         if (component.message !== null && component.message !== "") {
           editor.setContent(component.message);
         }
       },
-      height: height,
-      width: width,
+      height: "700px",
+      width: "100%",
       menubar: true,
       plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
+        "autoresize advlist autolink lists link image charmap print preview anchor",
         "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table paste help wordcount autoresize",
+        "insertdatetime media table paste help wordcount ",
       ],
       toolbar:
-        "undo redo | formatselect | " +
+        "fullscreen | undo redo | formatselect | " +
         "bold italic backcolor | alignleft aligncenter " +
         "alignright alignjustify | bullist numlist outdent indent | " +
-        "removeformat | help | fullscreen | image | paste | file",
+        "removeformat | help | image | paste | file",
       content_style:
         "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
       statusbar: false,
@@ -52,7 +87,10 @@ class InitTinyMce {
       entity_encoding: "html",
       oninit: "setPlainText",
       apply_source_formatting: true,
-      images_upload_url: "http://localhost/regno/image_processor.php",
+      images_upload_handler: this.example_image_upload_handler(),
+      images_upload_url:
+        "http://localhost:8007/api/v1/image_processor/" +
+        JSON.parse(localStorage.getItem("user")).usersRef,
       automatic_uploads: true,
       images_dataimg_filter: function (img) {
         return !img.hasAttribute("internal-blob"); // blocks the upload of <img> elements with the attribute "internal-blob".
@@ -65,12 +103,6 @@ class InitTinyMce {
       custom_elements: "style,link,~link",
       verify_html: false,
       inline_styles: true,
-      // setup: function(ed) {
-      //     ed.on('change', function(e) {
-      //         tinyMCE.triggerSave();
-      //     });
-      // },
-      // cleanup: true,
     });
   }
 }

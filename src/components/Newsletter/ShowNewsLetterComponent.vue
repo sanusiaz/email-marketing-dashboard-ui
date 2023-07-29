@@ -32,7 +32,8 @@
                 <span
                     v-if="this.newsletterInfo.recipients !== null && this.newsletterInfo.recipients !== '' && this.newsletterInfo.recipients !== undefined"
                     class="block relative">
-                    <span class="font-Barlow" v-if="this.newsletterInfo.recipients !== null" v-html="( this.newsletterInfo.recipients !== null ) ? this.newsletterInfo.recipients.join(', ') : null"></span>
+                    <span class="font-Barlow" v-if="this.newsletterInfo.recipients !== null"
+                        v-html="(this.newsletterInfo.recipients !== null) ? this.newsletterInfo.recipients.join(', ') : null"></span>
                 </span>
             </div>
 
@@ -77,7 +78,8 @@
             <!-- Edit Button -->
             <router-link
                 class="text-center w-max bg-blue-700 text-white font-normal font-Poppins p-2 duration-200 hover:underline hover:bg-white hover:duration-200 hover:text-blue-700 border border-transparent hover:border-blue-700 hover:shadow-md block mt-3 rounded px-5"
-                :to="{ name: 'admin-newsletter-update', params: { id: this.newsletterInfo.id } }">Edit Newsletter</router-link>
+                :to="{ name: 'admin-newsletter-update', params: { id: this.newsletterInfo.id } }">Edit
+                Newsletter</router-link>
 
         </section>
 
@@ -119,7 +121,7 @@ export default {
 
     methods: {
 
-        async getTemplatesContents( __uuid ) {
+        async getTemplatesContents(__uuid) {
             if (__uuid !== null && __uuid !== '') {
 
                 try {
@@ -135,7 +137,10 @@ export default {
                         this.statusText = 'error'
                     }
                 } catch (error) {
-                    console.log(error)
+                    this.statusText = 'error'
+                    let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
+                    this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
+
                 }
             }
         },
@@ -182,7 +187,7 @@ export default {
 
                     this.formData.template = this.newsletterInfo.template
 
-                    if ( this.newsletterInfo.message === null) {
+                    if (this.newsletterInfo.message === null) {
                         // Get default template message
                         this.getTemplatesContents(this.newsletterInfo.template)
                     }

@@ -167,7 +167,6 @@ export default {
                 this.newsletters = __response.data.data
             }
         }catch(error) {
-            console.log(error)
             this.statusText = 'error'
             let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
             this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message

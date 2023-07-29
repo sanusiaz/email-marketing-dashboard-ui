@@ -20,12 +20,10 @@ export default {
             try {
                 let __response = await axios.get('/overview/bounce/emails')
                 if ( __response.status === 200 && __response.statusText !== 'error' ) {
-                    console.log(__response)
                     this.bounceRecords = __response.data.last7DaysData
                     this.parseCharts()
                 }                 
             } catch( error ) {
-                console.error(error)
             }
         },
 

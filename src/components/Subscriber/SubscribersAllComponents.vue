@@ -104,7 +104,6 @@ export default {
         await axios.get('/subscribers?includesCreateLink=true')
             .then(res => {
                 if ( res.status === 200 ) {
-                    console.log(res.data)
                     this.subscribers = res.data.data
 
                     if ( res.data.createSubscriberLink !== undefined ) {
@@ -120,7 +119,6 @@ export default {
                 else {
                     this.$emit('getMessage', 'Internal Server Error')
                 }
-                console.error(error.response.data.message)
                 this.$emit('getStatusText', 'error')
             })
     },

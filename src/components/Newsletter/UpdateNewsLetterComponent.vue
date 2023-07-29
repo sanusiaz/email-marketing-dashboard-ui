@@ -44,7 +44,6 @@
                         </div>
 
 
-                                {{ this.formData.template }} d jwdhh
                         <div class="bg-white p-2 rounded-md border border-gray-200">
                             <span
                                 class="p-2 py-4 border-b border-gray-700 block relative font-semibold capitalize font-Poppins">Pick
@@ -97,25 +96,28 @@
                         </div>
                     </div>
 
-
                     <!-- Second Step -->
                     <div class="steps relative pt-5" v-show="stepCount === 2" :stepCount="stepCount">
                         <span class="font-Inter underline pt-5">Send to:</span>
 
                         <div class="overflow-y-auto mt-3 mb-2 px-3 pr-4">
 
-                            <span class="pr-2 font-normal text-sm font-Inter">Selected Email Lists:</span> <span
+                            <span v-if="!this.isForRecipients" class="pr-2 font-normal text-sm font-Inter">Selected Email
+                                Lists: {{ this.formData.listName }}</span> <span
                                 class="font-semibold text-sm font-OpenSans">{{ this.formData.selectedList }}</span>
-                            <select @change="setEmails" v-if="this.isForRecipients === false"
-                                v-model="this.formData.listsId" name="email_folder"
+                            <select @change="setEmails" v-if="!this.isForRecipients" v-model="this.formData.listsId"
+                                name="email_folder"
                                 class="border border-gray-400 font-Inter px-3 py-3 placeholder-slate-400 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-slate-500 focus:ring-1 w-full ease-linear transition-all duration-150">
                                 <option value="" aria-selected="" disabled>Please Select a value</option>
-                                <option v-for="option in emailListsFolders" :key="option.id" :value="option.id">
+                                <option v-for="option in emailListsFolders" :selected="option.id === this.formData.lists"
+                                    :key="option.id" :value="option.id">
                                     {{ option.name }}</option>
                             </select>
 
                             <!-- Recipients Emails -->
-                            <label v-if="this.isForRecipients === true" for="message" class="py-3 flex flex-col  px-1">
+                            <label
+                                v-if="this.isForRecipients === true || (this.formData.recipients !== null && this.formData.recipients !== '')"
+                                for="message" class="py-3 flex flex-col  px-1">
                                 <span class="font-normal text-left font-Outfit py-2">Recipients Emails</span>
                                 <!-- Show Mesage Box to enter email message -->
                                 <textarea
@@ -157,9 +159,11 @@
                     <!-- Third Step -->
                     <div class="steps relative pt-5" v-show="stepCount === 3" :stepCount="stepCount">
 
-                        <div class="overflow-y-auto mt-3 mb-2 md:p-4" data-simplebar data-simplebar-auto-hide="false">
+                        <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
+
+                        <div class="overflow-y-auto mt-3 mb-2  relative z-40 h-[400px] md:h-[500px] " data-simplebar
+                            data-simplebar-auto-hide="false">
                             <label for="message" class="flex flex-col mb-3 w-full space-y-3 pr-2">
-                                <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
                                 <textarea style="height: 500px;" v-model="this.formData.message" name="message" id="message"
                                     class="rounded-md bg-white p-3 mr-3 w-full text-sm placeholder:text-gray-400"
                                     placeholder="Enter Message Here">{{ this.formData.message }}</textarea>
@@ -207,7 +211,8 @@
 
 
     <!-- Popup Message -->
-    <PopupMessageComponent  v-if="this.popupMessage !== ''" :popupMessage="this.popupMessage" :statusText="this.statusText" ></PopupMessageComponent>
+    <PopupMessageComponent v-if="this.popupMessage !== ''" :popupMessage="this.popupMessage" :statusText="this.statusText">
+    </PopupMessageComponent>
 </template>
 
 <script>
@@ -217,6 +222,8 @@ import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 
 import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
 import FormComponent from '@/components/FormsComponents/FormComponent.vue'
+
+import InitTinyMce from '../../services/InitTinyMce'
 
 
 export default {
@@ -269,13 +276,13 @@ export default {
 
     methods: {
 
-         async getTemplatesContents( __uuid ) {
+        async getTemplatesContents(__uuid) {
             if (__uuid !== null && __uuid !== '') {
                 try {
                     let response = await axios.get(`/templates/${__uuid}`)
                     if (response.status === 200) {
                         this.formData.message = response.data
-                        this.initTinyMce()
+                        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
                     }
                 } catch (error) {
                 }
@@ -287,7 +294,7 @@ export default {
             this.formData.message = ''
             this.popupMessage = this.statusText = ''
 
-            this.initTinyMce()
+            InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
             this.formData.template = template
 
             let __SelectedTemplate = this.templates.filter((e) => {
@@ -303,7 +310,7 @@ export default {
                     if (__contents.status === 200) {
 
                         this.formData.message = __contents.data
-                        this.initTinyMce()
+                        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
                         this.popupMessage = 'Template has been selected'
                         this.statusText = 'success'
 
@@ -368,17 +375,15 @@ export default {
 
         // Update Campaign Message
         async submit() {
-            if ( this.newsletterId !== null && this.newsletterId !== undefined ) {
+            if (this.newsletterId !== null && this.newsletterId !== undefined) {
 
                 this.statusText = ''
                 this.popupMessage = ''
                 this.processingForm = true
                 try {
                     let __response = await axios.patch(`/newsletters/${this.newsletterId}`, this.formData)
-                    console.log(__response)
 
                     if (__response.status === 201) {
-                        console.log(__response.data)
                         this.popupMessage = __response.data.message
                         this.statusText = 'success'
                     }
@@ -386,8 +391,8 @@ export default {
                         this.popupMessage = 'An Error Occurred. Please Try Again'
                         this.statusText = 'error'
                     }
+                    this.processingForm = false
                 } catch (error) {
-                    console.log(error)
                     this.statusText = 'error'
                     let serverErrorMessage = (error.request.response !== undefined
                         && error.request.response !== '')
@@ -395,8 +400,8 @@ export default {
                         : 'Internal Server Error'
 
                     this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
+                    this.processingForm = false
                 }
-                this.processingForm = false
             }
             else {
                 this.popupMessage = 'Invalid Newsletter'
@@ -410,9 +415,6 @@ export default {
                 this.popupMessage = 'Parsing Contents. Please Wait..'
                 this.statusText = 'success'
                 let __response = await axios.get('/newsletters/' + this.newsletterId + '?includeMessage=true')
-
-                console.log(__response)
-
                 if (__response.status === 200) {
 
                     let __data = __response.data.data;
@@ -421,90 +423,37 @@ export default {
                     this.formData.subject = __data.subject
 
                     this.formData.selectedList = __data.selectedList
+                    this.formData.listName = __data.lists
+
                     this.formData.lists = __data.listId
+                    if (__data.listId === null) {
+                        this.isForRecipients = true
+                    }
+                    else {
+                        this.isForRecipients = false
+                    }
                     this.formData.sendTo = __data.sendTo
-                    this.formData.recipients = ( __data.recipients !== null ) ? 
-                         __data.recipients.join(', ') : null
+                    this.formData.recipients = (__data.recipients !== null) ?
+                        __data.recipients.join(', ') : null
                     this.formData.template = __data.template
 
                     this.formData.created = __data.createdAt
                     this.formData.message = __response.data.message
 
-                    if ( this.formData.message === null ) {
+                    if (this.formData.message === null) {
                         this.getTemplatesContents(this.formData.template)
                     }
                     else {
-                        this.initTinyMce()
+                        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
                     }
                 }
             } catch (error) {
-                console.log(error)
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
             }
         },
 
-
-        // Inistalize TinyMCE
-        initTinyMce() {
-            tinymce.remove();
-
-            var component = this.formData;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        component.message = editor.getContent();
-                    });
-                    // component.objTinymce = editor;
-                    if (component.message !== null && component.message !== '') {
-                        editor.setContent(component.message)
-                    }
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
-        },
     },
 
     mounted() {

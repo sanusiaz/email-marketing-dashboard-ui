@@ -21,9 +21,22 @@
                     placeholder="Enter Message Here">{{ this.formData.message }}</textarea>
             </label>
 
-            <ButtonComponent @click.prevent="submitForm()" type="submit"
-                class="px-5 hover:border-blue-600 mt-3 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
-                Set Message</ButtonComponent>
+
+
+            <ButtonComponent
+                class="text-sm cursor-pointer bg-blue-700 w-max rounded-md duration-200 hover:duration-200 hover:bg-slate-700 font-Inter font-semibold text-white text-center p-3 px-5"
+                @click.prevent="submitForm()" type="submit">
+                <div
+                    class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-full h-full relative top-0 left-0 right-0">
+                    <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg> {{ (this.processingForm) ? 'Processing' : 'Set Message' }}
+                </div>
+            </ButtonComponent>
 
         </template>
 
@@ -39,6 +52,8 @@ import axios from 'axios'
 import FormComponent from '../FormsComponents/FormComponent.vue'
 import ButtonComponent from '../Auth/ButtonComponent.vue'
 import PopupMessageComponent from '../PopupMessageComponent.vue'
+import InitTinyMce from '../../services/InitTinyMce.js'
+
 
 export default {
     name: 'WelcomeEmailComponent',
@@ -48,6 +63,7 @@ export default {
                 message: '',
                 subject: ''
             },
+            processingForm: false
         }
     },
     props: {
@@ -62,11 +78,11 @@ export default {
 
     methods: {
         async submitForm() {
+            this.processingForm = true
             this.$emit('getMessage', '')
             this.$emit('getStatusText', '')
             try {
                 let __response = await axios.post('/subscribers/welcome', this.formData)
-                console.log(__response)
                 if (__response.status === 201) {
                     this.$emit('getMessage', __response.data.message)
                     this.$emit('getStatusText', 'success')
@@ -76,6 +92,8 @@ export default {
                     this.$emit('getStatusText', 'error')
                 }
 
+                this.processingForm = false
+
             } catch (error) {
                 if (error.response.data.message !== undefined && error.response.data.message !== "") {
                     this.$emit('getMessage', error.response.data.message)
@@ -83,71 +101,17 @@ export default {
                 else {
                     this.$emit('getMessage', 'Internal Server Error')
                 }
-                console.error(error.response.data.message)
                 this.$emit('getStatusText', 'error')
+
+                this.processingForm = false
             }
         },
 
-        initTinyMce() {
-            // TINYMCE INIT
-            tinymce.remove();
-
-            var component = this.formData;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.setContent(component.message)
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        component.message = editor.getContent();
-                    });
-                    // component.objTinymce = editor;
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
-        }
     },
     components: { FormComponent, ButtonComponent, PopupMessageComponent },
     async mounted() {
+
+        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
 
         this.$emit('getTitle', this.title)
         this.$emit('getMessage', '')
@@ -162,11 +126,9 @@ export default {
                     this.formData.message = __response.data.data.message;
                     this.$emit('getMessage', __response.data.message)
                     this.$emit('getStatusText', 'success')
-                    
-                    tinymce.remove();
-                    this.initTinyMce()
 
-                    console.log(this.formData)
+                    // Inistalize tinmce plugin
+                    InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
                 }
             }
         } catch (error) {
@@ -177,10 +139,9 @@ export default {
         }
 
 
-        
+
 
     }
-
 }
 </script>
 

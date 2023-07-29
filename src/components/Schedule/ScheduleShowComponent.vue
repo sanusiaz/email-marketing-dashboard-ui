@@ -31,12 +31,14 @@
                         </label>
                     </div>
 
+                    
+
                     <!-- Recipients Email Addresses -->
                     <label v-if="this.scheduleInfo.sendTo === 'recipients'" for="recipients" class="flex flex-col w-full space-y-3">
                         <span class="text-sm font-semibold text-left font-Poppins">Enter Recipient(s) Email Address: </span>
-                        <textarea name="recipients" id="recipients" v-model="this.scheduleInfo.recipients" col="30" rows="5"
+                        <textarea name="recipients" id="recipients" v-on:change="updateRecipients" col="30" rows="5"
                             class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
-                            placeholder="Seperate each address with a (,)"></textarea>
+                            placeholder="Seperate each address with a (,)">{{ this.scheduleInfo.recipientsEmails.join(', ') }}</textarea>
                     </label>
 
 
@@ -59,9 +61,10 @@
                     <div class="grid grid-cols-1 gap-5 md:gap-20 md:grid-cols-2">
                         <!-- Date -->
                         <label for="scheduled_date" class="flex w-full flex-col space-y-3">
-                            <span class="text-sm font-semibold text-left font-Poppins">Scheduled Date: </span>
+                            <span class="text-sm font-semibold text-left font-Poppins">Scheduled Date: (<small class="text-xs text-gray-500">{{ this.scheduleInfo.rawScheduleDate }}</small>)</span>
                             <input type="date" name="scheduled_date" id="scheduled_date"
-                                v-model="this.scheduleInfo.scheduledDate"
+                                v-on:input="updateScheduledDate"
+                                v-model="this.scheduleInfo.rawScheduleDate"
                                 class="rounded-md w-full bg-white p-3 text-sm placeholder:text-gray-400"
                                 placeholder="Scheduled Date">
                         </label>
@@ -76,13 +79,16 @@
                         </label>
                     </div>
 
-                    <!-- Message -->
-                    <label for="message" class="flex flex-col w-full space-y-3">
-                        <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
-                        <textarea v-model="this.scheduleInfo.message" name="message" id="message"
-                            class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
-                            placeholder="Enter Message Here"></textarea>
-                    </label>
+                    
+                    <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
+                    <div class="overflow-y-auto mt-3 mb-2  relative z-40 h-[400px] md:h-[500px] " data-simplebar data-simplebar-auto-hide="false">
+                        <!-- Message -->
+                        <label for="message" class="flex flex-col w-full space-y-3">
+                            <textarea  v-model="this.scheduleInfo.message" name="message" id="message"
+                                class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
+                                placeholder="Enter Message Here"></textarea>
+                        </label>
+                    </div>
 
 
                     <!-- Attachments -->
@@ -127,6 +133,9 @@ import FormComponent from '@/components/FormsComponents/FormComponent.vue'
 
 // Button Component
 import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
+
+import InitTinyMce from '../../services/InitTinyMce.js'
+
 export default {
     name: 'ScheduleShowComponent',
     data() {
@@ -138,11 +147,21 @@ export default {
             processingForm: false,
             emailToggle: '',
             emailLists: '',
+            formData: {
+                subject: '',
+                sendTo: '',
+                attachments: '',
+                scheduledDate: '',
+                scheduledTime: '',
+                message: '',
+                subscribers: '',
+                recipients: '',
+                lists: ''
+            },
             sendToArray: [
                 {id: 1, name: 'Recipients', value: 'recipients'},
                 {id: 2, name: 'Subscribers', value: 'subscribers'},
                 {id: 3, name: 'Email Lists / Folder', value: 'lists'},
-                {id: 4, name: 'Newsletter', value: 'newsletter'},
             ],
             selectedSendTo: 1,
             uploadedFiles: []
@@ -150,69 +169,18 @@ export default {
     },
 
     methods: {
-        tinymceInit() {
-            tinymce.remove();
 
-            var component = this.scheduleInfo;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        component.message = editor.getContent();
-                    });
-                    // component.objTinymce = editor;
-                    if (component.message !== null && component.message !== '') {
-                        editor.setContent(component.message)
-                    }
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
+        updateScheduledDate(event) {
+            this.scheduleInfo.rawScheduleDate = event.target.value
         },
+
+        updateRecipients(event) {
+            this.formData.recipients = event.target.value
+        },  
 
         updateAction(value) {
             let __selectedAction = value.target.value
             this.scheduleInfo.lists = null
-            this.scheduleInfo.newsletter = null
             this.scheduleInfo.subscribers = null
             this.scheduleInfo.recipients = null
 
@@ -234,13 +202,19 @@ export default {
             this.processingForm = true
             this.popupMessage = ''
             this.statusText = ''
-            console.log(this.scheduleInfo.attachments)
-  
-            await axios.post(`/schedule/${this.scheduleId}`, this.scheduleInfo, {
+
+            this.formData.subject = this.scheduleInfo.subject
+            this.formData.scheduledDate = this.scheduleInfo.rawScheduleDate
+            this.formData.scheduledTime = this.scheduleInfo.scheduledTime
+            this.formData.sendTo = this.scheduleInfo.sendTo
+            this.formData.message = this.scheduleInfo.message
+            this.formData.attachments = this.scheduleInfo.attachments
+            this.formData.lists = this.scheduleInfo.lists
+
+            await axios.patch(`/schedule/${this.scheduleId}`, this.formData, {
                 'Content-type': 'multipart/form-data'
             })
                 .then(response => {
-                    console.log(response)
                     if ( response.status === 201 ) {
                         this.popupMessage = response.data.message
                         this.statusText = 'success'
@@ -271,7 +245,6 @@ export default {
             this.scheduleInfo.sendTo = value
 
             this.scheduleInfo.lists = null;
-            this.scheduleInfo.newsletter = '';
             this.scheduleInfo.subscribers = null;
             this.scheduleInfo.recipients = null;
             this.scheduleInfo.emailListFolderName = ''
@@ -292,10 +265,6 @@ export default {
                     case 'subscribers':
                         this.scheduleInfo.subscribers = 'selected'
                         break;
-                    case 'newsletter':
-                        this.scheduleInfo.newsletter = 'selected'
-                        break;
-
                     default:
                         break;
                 }
@@ -327,11 +296,11 @@ export default {
                 this.emailToggle = this.scheduleInfo.sendTo
 
                 // Inistalize tinmce plugin
-                this.tinymceInit()
+                InitTinyMce.initTinyMce('textarea#message', this.scheduleInfo, this.$el);
 
             }
         } catch (error) {
-            if ( error.response.status === 404 ) {
+            if (error.response.status !== undefined && error.response.status === 404 ) {
                 this.popupMessage = 'No Record Found'
                 this.statusText = 'error'
 
@@ -339,7 +308,10 @@ export default {
                     this.$router.go(-1)
                 }, 5000 )
             }
-            console.error(error)
+            else {
+                this.popupMessage = 'Internal Server Error'
+                this.statusText = 'error'
+            }
         }
     }
 }

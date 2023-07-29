@@ -56,7 +56,6 @@ export default {
             .then(response => {
                 if (response.data.data !== undefined && response.status === 200) {
 
-                    console.log(response.data.data)
                     this.profilePicsUrl = response.data.data;
                     this.$emit("profilePicsUrl", this.profilePicsUrl);
                 }

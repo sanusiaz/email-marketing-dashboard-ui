@@ -435,7 +435,6 @@ export default {
                 }
             })
             .catch((error) => {     
-                console.error(error)           
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : error.message
@@ -477,14 +476,14 @@ export default {
             this.popupMessage = this.statusText =  ''
             await axios.post('/settings/config', this.formData.config)
                 .then(response => {
-                    console.log('Email COnfig Settings')
-                    console.log(response)
                     this.statusText = 'success'
                     let serverSuccessMessage = response.data.message
                     this.popupMessage = ( serverSuccessMessage !== undefined ) ? serverSuccessMessage : 'Updated Successfully'
                     this.processingForm = false
+
+                    this.showEmailConfig = false
+                    
                 }).catch( error => {
-                    console.error(error)
                     this.statusText = 'error'
                     let serverErrorMessage = (error.response.data.message !== "" &&  error.response.data.message !== undefined) ? error.response.data.message : 'Internal Server Error'
                     this.popupMessage = ( serverErrorMessage !== undefined ) ? serverErrorMessage : 'Error: Please Contact Site Admin'

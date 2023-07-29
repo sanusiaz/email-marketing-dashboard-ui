@@ -149,11 +149,11 @@
 
 
                 <!-- Third Step -->
-                <div class="steps relative p-5 md:p-10" v-show="stepCount === 3" :stepCount="stepCount">
-
-                    <div class="overflow-y-auto mt-3 mb-2 md:p-4" data-simplebar data-simplebar-auto-hide="false">
+                <div class="steps relative p-5 md:p-7 " v-show="stepCount === 3" :stepCount="stepCount">
+                     <span class="text-sm p-4 py-7 pb-0 block mt-5 font-semibold text-left font-Poppins">Message: </span>
+                    <div class="overflow-y-auto mt-3 mb-2 md:p-4 relative z-40 h-[400px] md:h-[500px] lg:h-[700px]" data-simplebar data-simplebar-auto-hide="false">
                         <label for="message" class="flex flex-col mb-3 w-full space-y-3 pr-2">
-                            <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
+                           
                             <textarea style="height: 500px;" v-model="this.formData.message" name="message" id="message"
                                 class="rounded-md bg-white p-3 mr-3 w-full text-sm placeholder:text-gray-400"
                                 placeholder="Enter Message Here">{{ this.formData.message }}</textarea>
@@ -213,9 +213,7 @@ import InputComponent from '@/components/FormsComponents/InputComponent.vue'
 import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 
 import axios from 'axios'
-
-// // // Users can click to schedule this campaign instead
-// NB: Social media links will come from the profile, Logo same, Company Name Same
+import InitTinyMce from '../../services/InitTinyMce.js'
 
 export default {
     name: 'CreateNewNewsLetterComponent',
@@ -262,7 +260,7 @@ export default {
             this.popupMessage = '' 
             this.statusText = ''
 
-            this.initTinyMce()
+            InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
 
             this.formData.template = template 
             let __SelectedTemplate = this.templates.filter((e) => {
@@ -277,7 +275,7 @@ export default {
                     if (__contents.status === 200) {
 
                         this.formData.message = __contents.data
-                        this.initTinyMce()
+                        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
                         this.popupMessage = 'Template has been selected'
                         this.statusText = 'success'
 
@@ -287,12 +285,9 @@ export default {
 
                 } catch (error) {
                     this.statusText = 'error'
-                    let serverErrorMessage = (error.request.response !== undefined
-                        && error.request.response !== '')
-                        ? JSON.parse(error.request.response).message
-                        : 'Internal Server Error'
-
-                    this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
+                    
+                    this.popupMessage  = ( error.response.data.message !== undefined ) ? 
+                    error.response.data.message : 'Internal Server Error'
                 }
             }
             else {
@@ -331,69 +326,6 @@ export default {
             }
         },
 
-        // TinyMCE Setup
-        initTinyMce() {
-
-            tinymce.remove();
-
-
-            var component = this.formData;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        component.message = editor.getContent();
-                        // component.objTinymce = editor;
-                    });
-
-                    if (component.message !== null && component.message !== '') {
-
-                        editor.setContent(component.message)
-                    }
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
-        },
 
         async submit() {
             this.statusText = this.popupMessage = ''
@@ -411,14 +343,15 @@ export default {
                         this.$router.go(-1)
                     }, 5000);
                 }
+                this.processingForm = false
 
             } catch (error) {
                 this.statusText = 'error'
                 let serverErrorMessage = (error.request.response !== "") ? JSON.parse(error.request.response).message : 'Internal Server Error'
                 this.popupMessage = (serverErrorMessage !== undefined) ? serverErrorMessage : error.message
+                this.processingForm = false
             }
 
-            this.processingForm = false
         },
 
         setEmailLists(value) {
@@ -426,22 +359,9 @@ export default {
         }
     },
     mounted() {
-        this.initTinyMce()
+        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
         this.getAllTemplate()
         this.getAllListsFolders()
     },
 }
 </script>
-
-
-<style lang="scss">
-.popup_container {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    background: #808080ab;
-    width: 100%;
-    height: 100vh;
-    z-index: 999;
-}</style>

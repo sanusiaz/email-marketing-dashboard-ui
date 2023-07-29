@@ -36,7 +36,6 @@ export default {
 				localStorage.removeItem('loggedInTimeStamp')
 				// if there is any error redirect the user to login page 
 
-				// console.log(this.$router.currentRoute._value.meta)
 				if (this.$router.currentRoute._value.meta.requiresAuth !== undefined) {
 					this.$router.push('/login')
 				}

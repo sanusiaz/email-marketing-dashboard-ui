@@ -76,7 +76,6 @@ export default {
                     this.socialTraffic = __response.data.data
                 }
             } catch(error) {
-                console.log(error)
             }
         }
     },

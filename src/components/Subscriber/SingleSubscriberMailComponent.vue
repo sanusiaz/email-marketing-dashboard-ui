@@ -83,18 +83,18 @@
             </div>
 
             <!-- Third Step is the message and send button -->
-            <div class="steps relative p-3" v-show="stepCount === 3" :stepCount="stepCount">
+            <div class="steps relative p-3" style="z-index: 999;" v-show="stepCount === 3" :stepCount="stepCount">
                 <!-- Message Box -->
-                <div class="overflow-y-auto max-h-[300px] mt-3 mb-2" data-simplebar data-simplebar-auto-hide="false"> 
+                <div class="overflow-y-auto max-h-[300px] mt-3 mb-2" style="z-index: 9999;" data-simplebar data-simplebar-auto-hide="false">
                     <label for="message" class="flex flex-col mb-3 w-full space-y-3">
                         <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
-                        <textarea style="height: 500px;" v-model="this.formData.message" name="message" id="message"
+                        <textarea style="height: 1200px; " v-model="this.formData.message" name="message" id="message"
                             class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
                             placeholder="Enter Message Here">{{ this.formData.message }}</textarea>
                     </label>
                 </div>
 
-                <div class="flex py-3 w-full justify-between">
+                <div class="flex py-3 w-full justify-between" style="z-index: -1;">
                     <!-- Prev -->
                     <span @click="this.stepCount = this.stepCount - 1"
                         class="h-12 cursor-pointer w-12 bg-blue-600 hover:text-blue-700 hover:shadow-lg text-white hover:bg-white border border-transparent hover:border-blue-600 transition-all duration-200 hover:duration-200 font-semibold p-3 rounded-full block relative hmax">
@@ -106,12 +106,18 @@
                     </span>
 
 
-                    <ButtonComponent @click.prevent="sendMessageToSubscriber()" type="submit" class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
-                        <div class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-max h-full relative top-0 left-0 right-0">
-                            <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg> {{  ( this.processingForm  ) ? 'Processing' : 'Send Message'  }}
+                    <ButtonComponent @click.prevent="sendMessageToSubscriber()" type="submit"
+                        class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
+                        <div
+                            class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-max h-full relative top-0 left-0 right-0">
+                            <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg> {{ (this.processingForm) ? 'Processing' : 'Send Message' }}
                         </div>
                     </ButtonComponent>
 
@@ -140,6 +146,8 @@ import axios from 'axios'
 import FormComponent from '../FormsComponents/FormComponent.vue'
 import ButtonComponent from '../Auth/ButtonComponent.vue'
 import PopupMessageComponent from '../PopupMessageComponent.vue'
+
+import InitTinyMce from '../../services/InitTinyMce.js'
 
 
 import 'simplebar'; // or "import SimpleBar from 'simplebar';" if you want to use it manually.
@@ -178,65 +186,8 @@ export default {
     },
 
     methods: {
-        initTinyMce() {
-            tinymce.remove();
-            this.formData.email = this.selectedEmail
 
-            var component = this.formData;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        component.message = editor.getContent();
-                    });
-
-                    if ( component.message !== null && component.message !== '' ) {
-                        editor.setContent(component.message)
-                    }
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
-        },
+        
         // Send Message to receivers email
         async sendMessageToSubscriber() {
             this.statusText = this.popupMessage = ''
@@ -246,7 +197,7 @@ export default {
                 if (__response.status === 200) {
                     this.statusText = 'success'
                     this.popupMessage = __response.data.message
-                    
+
                     // Close Form After 5 secs
                     setTimeout(() => {
                         this.$emit('closeForm', true)
@@ -266,14 +217,14 @@ export default {
 
                 this.processingForm = false
             }
-            
+
         },
 
         // Get Selected Template Content and parse it to message box
         async setSelectedTemplate(template) {
             // This will clear out previous messages / template 
             this.formData.message = ''
-            
+
             this.formData.template = template
 
             this.statusText = this.popupMessage = ''
@@ -290,10 +241,11 @@ export default {
                 try {
                     let __contents = await axios.get(__SelectedTemplate[0].preview);
                     if (__contents.status === 200) {
-                       
-                        
+
+
                         this.formData.message = __contents.data
-                        this.initTinyMce()
+                        this.formData.email = this.selectedEmail
+                        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
                         this.popupMessage = 'Template has been selected'
                         this.statusText = 'success'
 
@@ -302,7 +254,6 @@ export default {
 
 
                 } catch (error) {
-                    console.error(error)
                     error = JSON.parse(error.response.request.response)
                     this.statusText = 'error'
                     this.popupMessage = error.message
@@ -318,10 +269,7 @@ export default {
 
         }
     },
-    components: { FormComponent, ButtonComponent, PopupMessageComponent },
-    mounted() {
-        // this.initTinyMce()
-    }
+    components: { FormComponent, ButtonComponent, PopupMessageComponent }
 }
 </script>
 

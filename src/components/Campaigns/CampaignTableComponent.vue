@@ -30,7 +30,7 @@
                 <table class="w-full whitespace-no-wrap">
                     <thead>
                         <tr
-                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b">
+                            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
                             <th class="px-4 py-3">Id</th>
                             <th class="px-4 py-3">Campaign</th>
                             <th class="px-4 py-3">Total Emails</th>

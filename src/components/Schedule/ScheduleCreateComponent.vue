@@ -46,7 +46,6 @@
                             <option value="recipients">Email Addresse(s)</option>
                             <option value="lists">Email Lists / Folder</option>
                             <option value="subscribers">All Subscribers</option>
-                            <option value="newsletter">Newsletter</option>
                         </select>
                     </label>
                 </div>
@@ -138,6 +137,8 @@
             <!-- Second Step -->
             <div class="flex flex-col space-y-6 p-2 py-5 pb-0" v-show="stepCount === 2" :stepCount="stepCount">
 
+             <div class="overflow-y-auto relative z-40 max-h-[400px] md:max-h-[500px] lg:max-h-[700px]" data-simplebar data-simplebar-auto-hide="false">
+
                 <!-- Message -->
                 <label for="message" class="flex flex-col w-full space-y-3">
                     <span class="text-sm font-semibold text-left font-Poppins">Message: </span>
@@ -145,6 +146,7 @@
                         class="rounded-md bg-white p-3 w-full text-sm placeholder:text-gray-400"
                         placeholder="Enter Message Here"></textarea>
                 </label>
+                </div>
 
 
                 <!-- Attachments -->
@@ -190,15 +192,12 @@
 
 <script>
 import axios from 'axios'
-import 'simplebar'; // or "import SimpleBar from 'simplebar';" if you want to use it manually.
-import 'simplebar/dist/simplebar.css'
 
-// You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
-import ResizeObserver from 'resize-observer-polyfill';
 import FormComponent from '../FormsComponents/FormComponent.vue';
 import PopupMessageComponent from '@/components/PopupMessageComponent.vue'
 import ButtonComponent from '@/components/Auth/ButtonComponent.vue'
 
+import InitTinyMce from '../../services/InitTinyMce.js'
 
 export default {
     name: "ScheduleCreateComponent",
@@ -216,7 +215,6 @@ export default {
                 scheduledTime: '',
                 message: '',
                 subscribers: '',
-                newsletter: '',
                 recipients: '',
                 lists: ''
             },
@@ -231,7 +229,6 @@ export default {
             this.formData.sendTo = value
 
             this.formData.lists = '';
-            this.formData.newsletter = '';
             this.formData.subscribers = '';
             this.formData.recipients = '';
 
@@ -251,10 +248,7 @@ export default {
                     case 'subscribers':
                         this.formData.subscribers = 'selected'
                         break;
-                    case 'newsletter':
-                        this.formData.newsletter = 'selected'
-                        break;
-
+            
                     default:
                         break;
                 }
@@ -268,7 +262,7 @@ export default {
             this.formData.attachments = this.$refs.file.files
         },
 
-        // Get all newsletter templates 
+        // Get all templates 
         async getAllTemplate() {
             let __response = await axios.get('/templates')
             if (__response.status === 200) {
@@ -284,12 +278,9 @@ export default {
             this.popupMessage = ''
             this.formData.template = template
             
-            tinymce.remove()
-
             let __SelectedTemplate = this.templates.filter((e) => {
                 return e.uuid === template
             })
-
 
             if (__SelectedTemplate[0].preview !== undefined) {
                 this.popupMessage  = 'Parsing Templates Contents..'
@@ -300,7 +291,7 @@ export default {
 
                         this.formData.message = ''
                         this.formData.message = __contents.data
-                        this.initTinyMce()
+                        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
 
                         this.popupMessage  = 'Templates Has Been Selected.'
                         this.statusText = 'success'
@@ -310,7 +301,6 @@ export default {
 
 
                 } catch (error) {
-                    console.error(error)
                     error = JSON.parse(error.response.request.response)
 
                     this.popupMessage  = error.message
@@ -327,8 +317,10 @@ export default {
          * Submit Schedule Form Request 
          */
         async submitForm() {
-            this.popupMessage  = ''
-            this.statusText = ''
+            this.popupMessage  = this.statusText = ''
+
+            this.$emit('getMessage', '')
+            this.$emit('getStatusText', '')
             this.processingForm = true
             const headers = { 'Content-Type': 'multipart/form-data' }
 
@@ -342,7 +334,6 @@ export default {
             }
             await axios.post('/schedule/create', this.formData, { headers })
                 .then(response => {
-                    console.log(response)
                     if (response.status === 201) {
                         // empty all form data 
                         this.formData.subject = ''
@@ -352,7 +343,6 @@ export default {
                         this.formData.scheduledTime = ''
                         this.formData.message = ''
                         this.formData.subscribers = ''
-                        this.formData.newsletter = ''
                         this.formData.recipients = ''
                         this.formData.lists = ''
 
@@ -371,72 +361,12 @@ export default {
 
         onInput: function (e) {
             this.$emit("update:modelValue", e.target.value);
-        },
-
-        initTinyMce() {
-            tinymce.remove();
-            tinymce.remove();
-
-            var component = this.formData;
-            // Tiny MCE Free Init 
-            tinymce.init({
-                selector: 'textarea#message',
-                target: this.$el,
-                init_instance_callback: function (editor) {
-                    editor.on('Change KeyUp Undo Redo', function (e) {
-                        // component.message = editor.getContent();
-                    });
-                    // component.objTinymce = editor;
-                    if (component.message !== null && component.message !== '') {
-                        editor.setContent(component.message)
-                    }
-                },
-                height: '700px',
-                width: '100%',
-                menubar: true,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table paste help wordcount autoresize'
-                ],
-                toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help | fullscreen | image | paste | file',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                statusbar: false,
-                toolbar_items_size: 'small',
-                element_format: 'html',
-                encoding: "UTF-8",
-                entity_encoding: "html",
-                oninit: "setPlainText",
-                apply_source_formatting: true,
-                images_upload_url: 'http://localhost/regno/image_processor.php',
-                automatic_uploads: true,
-                images_dataimg_filter: function (img) {
-                    return !img.hasAttribute('internal-blob');  // blocks the upload of <img> elements with the attribute "internal-blob".
-                },
-                file_picker_types: 'file image media',
-                images_file_types: 'jpg,svg,webp,png,svg',
-                allow_script_urls: true,
-                convert_urls: false,
-                extended_valid_elements: "style,link[href|rel]",
-                custom_elements: "style,link,~link",
-                verify_html: false,
-                inline_styles: true,
-                // setup: function(ed) {
-                //     ed.on('change', function(e) {
-                //         tinyMCE.triggerSave();
-                //     });
-                // },
-                // cleanup: true,
-            });
         }
     },
     components: { FormComponent, PopupMessageComponent, ButtonComponent },
     mounted() {
 
-        this.initTinyMce()
+        InitTinyMce.initTinyMce('textarea#message', this.formData, this.$el);
         this.getAllTemplate()
     },
 }
