@@ -33,7 +33,7 @@ import axios from 'axios'
                     // let __response = await axios.get()
 
                 } catch(error) {
-                    console.error(error)
+                    // console.error(error)
                 }
             },
             trigerButtonPressed(e) {
@@ -55,10 +55,7 @@ import axios from 'axios'
                     __showsearchResults = 'skksksksk'
                     this.showSearchResults = true
                 }
-                console.log(this)
             });
-
-            console.log(__showsearchResults)
 
         }
     }

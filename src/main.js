@@ -5,7 +5,6 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:8007/api/v1'
 // axios.defaults.baseURL = 'https://api-mailer.jobscarriers.com/api/v1'
 
-
 // Live Base URL 
 // axios.defaults.baseURL = 'https://api.regnotradesmailer.com/api/v1'
 

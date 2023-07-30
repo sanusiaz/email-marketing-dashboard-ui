@@ -356,6 +356,7 @@ export default {
                 }).catch(error => {
                     this.popupMessage  = error.response.data.message
                     this.statusText = 'error'
+                    this.processingForm = false
                 })
         },
 
