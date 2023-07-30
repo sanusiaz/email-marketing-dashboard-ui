@@ -49,9 +49,23 @@ testanother@domain.com" v-model="formData.emailLists" name="email_lists"
                                 d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"></path>
                         </svg>
                     </span>
+
                     <ButtonComponent @click.prevent="createOrUpdateListRequest()" type="submit"
-                        class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
-                        {{ ( this.requestType === 'create' ) ? 'Create' : 'Update' }}</ButtonComponent>
+                            class="px-5 hover:border-blue-600 hover:text-blue-600 transition-all duration-300 hover:duration-300 shadow-lg hover:bg-white border border-transparent right-1 w-max text-sm py-3 cursor-pointer rounded-md border-gray-100 bg-blue-600 text-white">
+                        <div
+                            class="flex align-center justify-center align-middle space-x-343,143,0.8)] w-max h-full relative top-0 left-0 right-0">
+                            <svg v-if="this.processingForm" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg> {{ (this.processingForm) ? 'Processing' : 
+                                ( this.requestType === 'create' ) 
+                                ? 'Create' : 'Update' }}
+                        </div>
+                    </ButtonComponent>
                 </div>
             </div>
         </template>
@@ -89,6 +103,7 @@ export default {
             },
             formIsCompleted: false,
             listIsCreated: false,
+            processingForm: false,
             statusText: 'error',
             popupMessage: ''
         }
@@ -124,6 +139,7 @@ export default {
         },
         async createOrUpdateListRequest() {
             this.popupMessage = ''
+                this.processingForm = true
             try {
                 let __response = ''
                 if ( this.requestType === 'create' ) {
@@ -137,6 +153,7 @@ export default {
                         'Accept': 'application/json'
                     })
                 }
+
 
 
                 if (__response.request.status === 201) {
@@ -160,11 +177,14 @@ export default {
                     }, 3200);
 
                 }
+                this.processingForm = false
 
             } catch (error) {
                 error = JSON.parse(error.response.request.response)
                 this.statusText = 'error'
                 this.popupMessage = error.message
+
+                this.processingForm = false
             }
         }
     },
