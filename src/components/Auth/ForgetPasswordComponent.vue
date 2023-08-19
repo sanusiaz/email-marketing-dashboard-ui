@@ -42,10 +42,10 @@
 
 // Please change this to the URL you want to redirect users after email verification
 // test 
-// const REDIRECTURLURL = 'https://google.com'
+// const REDIRECTURL = 'https://google.com'
 
 // Live
-// const REDIRECTURLURL = 'https://app.regnotradesmailer.com/'
+// const REDIRECTURL = 'https://app.regnotradesmailer.com/'
 
 const REDIRECTURL = 'https://mailer.jobscarriers.com'
 
@@ -74,14 +74,14 @@ export default {
         }, 
         async submitForm() {
             if ( this.email !== '' ) {
-
+                this.processingForm = true
                 this.successMessage = this.errorMessage = ''
                 await axios.post('/auth/forget-password', {
                     email: this.email,
-                    redirectURL: REDIRECTURLURL
+                    redirectURL: REDIRECTURL
                 })
                     .then(res => {
-                        this.processingForm = true
+                        this.processingForm = false
                         if ( res.status === 200 ) {
                             this.successMessage = res.data.message;
 
